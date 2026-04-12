@@ -6,6 +6,12 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.5.0/
 
 !!! [[0.5.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.5.0/]]
 
+!!!! Commit [[1b1268c|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/1b1268c5b49611c6c7f943c2c573a69b47ce6367]] (2026-04-12)
+
+```
+Fix broken changelogs
+```
+
 !!!! Commit [[a3f3067|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/a3f306729c5af6aaac6da4437022c32fef0cf53d]] (2026-04-12)
 
 ```

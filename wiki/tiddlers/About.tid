@@ -1,9 +1,11 @@
 created: 20260412143242688
-modified: 20260412144116075
+modified: 20260412191037349
 tags: TableOfContents
 title: About
 type: text/vnd.tiddlywiki
 
 The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a collapsible, nested outline from a plain-text description.  Created by <a href="mailto:scott@sauyet.com">Scott Sauyet</a>.
 
-<$transclude $tiddler="$:/_/so/version-history" $mode="block" />
+''Current version: <$text text={{{ [[$:/plugins/crosseye/simple-outline]get[version]] }}} />''
+
+[[Changelog]]

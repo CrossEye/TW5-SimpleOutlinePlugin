@@ -37,46 +37,25 @@ function tidFilename(title) {
   return title.replace(/:/g, '_').replace(/\//g, '_') + '.tid';
 }
 
+// Strip leading 'v{semver}: ' prefix from commit messages (redundant in version context)
+function stripVersionPrefix(msg) {
+  return msg.replace(/^v\d+\.\d+\.\d+(-[\w.]+)?\s*:\s*/, '').trim();
+}
+
 const tiddlerTitle = `$:/_/so/version/${version}`;
 const filename     = tidFilename(tiddlerTitle);
 const filepath     = path.join(ROOT, 'wiki', 'tiddlers', filename);
 
 const key         = sortKey(version);
 const downloadUrl = `${ghPagesBase}/${version}/`;
-const heading     = `!!! [[${version}|${downloadUrl}]] - ${date} <small>([[${shortHash}|${commitUrl}]])</small>`;
 
-// Split the commit message into a summary line and optional body.
-// Normalise bullet lists in the body: convert leading '- ' to '* ' and
-// ensure a blank line precedes the first item of each bullet run.
-function formatBody(text) {
-  const lines = text.split('\n');
-  const out   = [];
-  for (const line of lines) {
-    const norm     = /^- /.test(line) ? '* ' + line.slice(2) : line;
-    const isBullet = norm.startsWith('* ');
-    if (isBullet) {
-      const prev        = out.length > 0 ? out[out.length - 1] : null;
-      const prevIsBullet = prev !== null && prev.startsWith('* ');
-      if (prev !== null && prev !== '' && !prevIsBullet) {
-        out.push('');
-      }
-    }
-    out.push(norm);
-  }
-  return out.join('\n').trim();
-}
-
-const msgLines  = message.split('\n');
-const firstLine = msgLines[0].trim();
-const bodyText  = msgLines.slice(1).join('\n').trim();
-const body      = bodyText ? formatBody(bodyText) : '';
-
-const entry = body
-  ? `${heading}\n\n<details>\n<summary>''${firstLine}''</summary><div>\n\n${body}\n\n</div></details>\n\n----------\n`
-  : `${heading}\n\n''${firstLine}''\n\n----------\n`;
+// One commit block: h4 heading + fenced code block containing the raw message
+const stripped    = stripVersionPrefix(message);
+const commitBlock = `!!!! Commit [[${shortHash}|${commitUrl}]] (${date})\n\n\`\`\`\n${stripped}\n\`\`\`\n\n`;
 
 let content;
 if (!fs.existsSync(filepath)) {
+  // New tiddler: write field header + h3 version heading + first commit block + separator
   content = [
     `title: ${tiddlerTitle}`,
     `tags: so-version`,
@@ -86,12 +65,26 @@ if (!fs.existsSync(filepath)) {
     ``,
     ``,
   ].join('\n');
+  content += `!!! [[${version}|${downloadUrl}]]\n\n` + commitBlock + '----------\n';
 } else {
+  // Existing tiddler: insert new commit block right after the !!! version heading
+  // so commits stay in reverse chronological order (newest first).
   content = fs.readFileSync(filepath, 'utf8');
-  if (!content.endsWith('\n')) content += '\n';
+  const headingMatch = content.match(/(!!! \[\[.+?\]\]\n\n)/);
+  if (headingMatch) {
+    const insertPos = headingMatch.index + headingMatch[0].length;
+    content = content.slice(0, insertPos) + commitBlock + content.slice(insertPos);
+  } else {
+    // Fallback: prepend before the trailing ----------
+    const SEP = '----------\n';
+    if (content.endsWith(SEP)) {
+      content = content.slice(0, -SEP.length) + commitBlock + SEP;
+    } else {
+      if (!content.endsWith('\n')) content += '\n';
+      content += '\n' + commitBlock + SEP;
+    }
+  }
 }
-
-content += entry;
 
 fs.writeFileSync(filepath, content, 'utf8');
 console.log(`Updated ${filename}`);

@@ -1,35 +1,37 @@
-download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/
-sort-key: 000002000
-tags: so-version
 title: $:/_/so/version/0.2.0
-type: text/vnd.tiddlywiki
+tags: so-version
 version: 0.2.0
+sort-key: 000002000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/
 
-!!! [[0.2.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/]] - 2026-04-12 <small>([[4c40eab|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/4c40eabb35dc327c33b32754ce400db0f25befc1]])</small>
+!!! [[0.2.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/]]
 
-<details>
-<summary>''detail-template, session state, arrow icons, demo polish''</summary><div>
+!!!! Commit [[4c40eab|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/4c40eabb35dc327c33b32754ce400db0f25befc1]] (2026-04-12)
+
+```
+detail-template, session state, arrow icons, demo polish
 
 Widget:
-
-* Add detail-template attribute — renders a named template into the expanded content area with currentTiddler and so-label variables set
-* Add session-persistent open/closed state via qualify + TW state tiddlers and toggle event listeners; state tiddlers excluded from referencedTiddlers to prevent re-render loops
-* Replace two-span arrow show/hide with single .so-arrow span rotated 90° via CSS transform; one child widget per collapsible node instead of two
-* Raise minimum core-version to >=5.3.0
+- Add detail-template attribute — renders a named template into the
+  expanded content area with currentTiddler and so-label variables set
+- Add session-persistent open/closed state via qualify + TW state tiddlers
+  and toggle event listeners; state tiddlers excluded from referencedTiddlers
+  to prevent re-render loops
+- Replace two-span arrow show/hide with single .so-arrow span rotated 90° via
+  CSS transform; one child widget per collapsible node instead of two
+- Raise minimum core-version to >=5.3.0
 
 CSS / tiddlers:
-
-* Move outline-acts override CSS and templates out of plugin into :/_/so/css/ and $:/_/so/templates/ namespaces
-* Remove History of Computing custom stylesheet (Acts demo is sufficient)
-* Add .so-detail-title style for linked titles in detail-template content
+- Move outline-acts override CSS and templates out of plugin into
+  $:/_/so/css/ and $:/_/so/templates/ namespaces
+- Remove History of Computing custom stylesheet (Acts demo is sufficient)
+- Add .so-detail-title style for linked titles in detail-template content
 
 Demos / docs:
-
-* Rename Overview to Simple Outline Plugin; write full content
-* Add Detail Template Test Demo (public, in TableOfContents)
-* Restore intro text on Acts 7 and History of Computing demos
-* Strip created/modified fields from all non-system content tiddlers
-
-</div></details>
+- Rename Overview to Simple Outline Plugin; write full content
+- Add Detail Template Test Demo (public, in TableOfContents)
+- Restore intro text on Acts 7 and History of Computing demos
+- Strip created/modified fields from all non-system content tiddlers
+```
 
 ----------

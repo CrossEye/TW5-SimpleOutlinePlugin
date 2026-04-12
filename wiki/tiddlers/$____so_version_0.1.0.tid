@@ -1,18 +1,19 @@
-created: 20260412125138865
-modified: 20260412131413526
-download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.1.0/
-sort-key: 000001000
-tags: so-version
 title: $:/_/so/version/0.1.0
-type: text/vnd.tiddlywiki
+tags: so-version
 version: 0.1.0
+sort-key: 000001000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.1.0/
 
-!!! [[0.1.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.1.0/]] - 2026-04-12 <small>([[018e163|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/018e163e6f182b841027f1cfa7c75d60c67034d0]])</small>
+!!! [[0.1.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.1.0/]]
 
+!!!! Commit [[018e163|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/018e163e6f182b841027f1cfa7c75d60c67034d0]] (2026-04-12)
+
+```
 Initial commit — simple-outline plugin with three demo outlines
 
 Includes the $simple-outline widget (JS), default and custom stylesheets,
 Acts 7 / History of Computing / WikiText Reference demo content, and
 standard Node project scaffolding (package.json, LICENSE, README).
+```
 
 ----------

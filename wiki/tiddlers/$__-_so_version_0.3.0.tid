@@ -7,3 +7,15 @@ sort-key: 000003000
 
 [[eb53d66|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/eb53d66d0616b44d8e050ee1450180d5b31a5c84]]: v0.3.0: Overview polish — draggable WikiText link, tiddler rename
 
+[[c3b1ea2|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/c3b1ea2ada1983b1cfe866878172b0bc5046df1d]]: v0.3.0: build/release automation, version history, bump script
+
+- Add build/release/bump npm scripts; semver devDependency
+- scripts/bump.js: patch/minor/major/alpha/beta/rc version bumping
+- scripts/copyRelease.js: snapshot docs/index.html → docs/x.y.z/index.html
+- scripts/addVersionEntry.js: GA script to create/update version tiddlers
+- scripts/shouldTag.js: determines whether to create a git tag (major/minor only)
+- .github/workflows/release.yml: build docs, commit back, tag and release on minor/major
+- Version History tiddler with download links and changelog
+- Retroactive version tiddlers for 0.1.0, 0.2.0, 0.3.0
+- ghPagesBase field in package.json
+

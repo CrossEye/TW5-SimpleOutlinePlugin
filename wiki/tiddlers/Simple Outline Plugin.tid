@@ -1,5 +1,5 @@
 created: 20260412064835883
-modified: 20260412065048949
+modified: 20260412172250940
 tags: TableOfContents
 title: Simple Outline Plugin
 type: text/vnd.tiddlywiki
@@ -66,4 +66,4 @@ Shows the `detail-template` attribute in action.  Instead of transcluding a tidd
 
 !!! [[WikiText Reference Outline Demo]]
 
-Demonstrates that the outline structure stands on its own even when the referenced tiddlers don't exist locally.  The entry names are real tiddler titles from [[tiddlywiki.com|https://tiddlywiki.com]] — drag <span style="color: #5778d8; text-decoration: underline; cursor: grab;"><$draggable filter="[[$:/plugins/crosseye/simple-outline]] [[WikiText Reference Outline Demo]]" tag="span">the plugin and the outline tiddler</$draggable></span> to a copy of tiddlywiki.co, save and refresh to see it populated with live content. (A link to this tiddler will show up at the top of the table of contents.).  //Note that no tiddlers were harmed in the creation of this outline.//
+Demonstrates that the outline structure stands on its own even when the referenced tiddlers don't exist locally.  The entry names are real tiddler titles from the main site -- drag <span style="color: #5778d8; text-decoration: underline; cursor: grab;"><$draggable filter="[[$:/plugins/crosseye/simple-outline]] [[WikiText Reference Outline Demo]]" tag="span">the plugin and the outline tiddler</$draggable></span> to [[tiddlywiki.com|https://tiddlywiki.com]], save and refresh to see it populated with live content. (A link to this tiddler will show up at the top of the table of contents.).  //Note that no tiddlers were harmed in the creation of this outline.//

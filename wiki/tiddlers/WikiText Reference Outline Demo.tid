@@ -1,12 +1,11 @@
 caption: WikiText Reference
 created: 20260412064445159
-list-before: Welcome
-modified: 20260412131704992
+modified: 20260412172339381
 tags: [[Simple Outline Demo]] TableOfContents
 title: WikiText Reference Outline Demo
 type: text/vnd.tiddlywiki
 
-This outline uses the native browser disclosure triangles (the default style) and references the main site's documentation tiddlers directly -- drag the plugin and this outline tiddler to [[tiddlywiki.com|https://tiddlywiki.com]] to see it populated with live content. (It will show up at the top of the Table of Contents.)  ''Note'': This outline won't function properly on the demo page, since the data it uses is not included here!
+This outline uses the native browser disclosure triangles (the default style) and references the main site's documentation tiddlers directly -- drag the plugin and this outline tiddler to [[tiddlywiki.com|https://tiddlywiki.com]] to see it populated with live content. (It will show up at the top of the Table of Contents.)  ''Note'': This outline won't function properly on the demo page, since the demo page does not include the data used!
 
 <$simple-outline text="""
 !! Writing Text

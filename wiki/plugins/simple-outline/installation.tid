@@ -1,0 +1,16 @@
+title: $:/plugins/crosseye/simple-outline/installation
+type: text/vnd.tiddlywiki
+
+!! Installing by drag-and-drop
+
+Drag  [[$:/plugins/crosseye/simple-outline]] to your wiki. Save and refresh.
+
+If you want to be sure to have the latest version, make sure you're viewing this from from https://crosseye.github.io/TW5-SimpleOutlinePlugin/.  For older versions, see [[About|https://crosseye.github.io/TW5-SimpleOutlinePlugin/#About]].
+
+!! Installing manually on a Node wiki
+
+Download the latest release from [[GitHub|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/releases]], copy the folder `/wiki/plugins/simple-outline` into your wiki's `plugins` folder, and restart your wiki.
+
+!! Requirements
+
+TiddlyWiki 5.3.0 or later.  No other plugins are required.

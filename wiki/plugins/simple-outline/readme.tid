@@ -1,0 +1,6 @@
+title: $:/plugins/crosseye/simple-outline/readme
+type: text/vnd.tiddlywiki
+
+The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a collapsible, nested outline from a plain-text description.  Each node can reference a tiddler — when the tiddler has body text, the node becomes expandable and shows that content inline.  Open/closed state is preserved for the duration of the session.
+
+See the [[demo wiki|https://crosseye.github.io/TW5-SimpleOutlinePlugin/]] for full documentation and live examples.

@@ -1,0 +1,117 @@
+title: $:/plugins/crosseye/simple-outline/usage
+type: text/vnd.tiddlywiki
+
+!! Create Outline
+
+Once you've installed `simple-outline` to your TiddlyWiki 5.3.0+ wiki and saved, you can create an outline tiddler and use the widget:
+
+```
+<$simple-outline text={{MyOutlineTiddler}} class="outline"/>
+```
+
+Or supply the outline text inline:
+
+```
+<$simple-outline text="""
+!! Section heading
+
+  Group label
+    + tiddler-name
+    + display text :: tiddler-title
+""" class="outline"/>
+```
+
+!! Input Format
+
+Each line of the `text` attribute describes one node:
+
+|!Syntax |!Meaning |
+|`!! Heading` |Section header — renders as `<h2>` |
+|`+ tiddler-name` |Tiddler reference — expands to show its body if it exists |
+|`display text :: tiddler-name` |Same, with an explicit label instead of the tiddler title |
+|Plain text |Structural group — collapsible if it has children |
+|Indentation |Each extra indent level (leading spaces) is one nesting level deeper |
+
+For tiddler references, the displayed label comes from the first of these fields that exists on the tiddler: `summary` → `caption` → the name as written.
+
+!! Attributes
+
+|!Attribute |!Default |!Purpose |
+|`text` |— |The outline description (required) |
+|`class` |`outline` |CSS class(es) added to the container `<div>` |
+|`summary-template` |— |Tiddler rendered inside each `<summary>` element; receives `currentTiddler` and `so-label` |
+|`detail-template` |— |Tiddler rendered as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` |
+
+!! CSS Hooks
+
+The plugin generates a predictable DOM structure that you can target with CSS.
+
+|!Selector |!Element |
+|`.outline` (or your `class`) |The container `<div>` |
+|`.level-0` … `.level-10` |Applied to every element; controls indentation |
+|`.outline details` |Any collapsible node (group or tiddler item with content) |
+|`.outline details[open]` |A currently-expanded node |
+|`.outline details > summary` |The clickable row header |
+|`.so-arrow` |`<span>` inside `<summary>` holding the rotating arrow icon |
+|`.so-label` |`<span>` wrapping the display text inside `<summary>` |
+|`.so-toggle` |`<span>` after `.so-label` when `summary-template` is active — empty; useful for custom expand/collapse indicators |
+|`.ltgraybox` |`<div>` wrapping expanded tiddler content |
+|`div.item` |Non-expandable tiddler reference (tiddler has no body) |
+|`.outline h2` |Section header |
+
+To replace the default arrow with your own indicator:
+
+```css
+/* hide the default arrow */
+.my-outline .so-arrow { display: none !important; }
+
+/* use .so-toggle to show + / – instead */
+.my-outline details > summary .so-toggle::before { content: "+"; }
+.my-outline details[open] > summary .so-toggle::before { content: "−"; }
+```
+
+!! summary-template
+
+When set, the named tiddler is rendered inside each `<summary>` element instead of plain text.  Two variables are available: `<<currentTiddler>>` (the item's tiddler title) and `<<so-label>>` (the pre-computed display label).
+
+Example template tiddler:
+
+```
+<span class="so-label"><<so-label>></span><span class="so-toggle"></span>
+```
+
+Usage:
+
+```
+<$simple-outline text={{MyOutline}} class="my-outline"
+  summary-template="My Summary Template"/>
+```
+
+!! detail-template
+
+When set, the named tiddler is rendered as the expanded content for each item instead of transcluding the tiddler's body directly.  The same two variables are available.
+
+Example template tiddler — adds a linked title above the body:
+
+```
+<$link to=<<currentTiddler>> class="so-detail-title"><<currentTiddler>></$link>
+<$transclude $tiddler=<<currentTiddler>> $mode="block"/>
+```
+
+CSS for the linked title:
+
+```css
+.outline .so-detail-title {
+    display: block;
+    font-weight: bold;
+    border-bottom: 1px solid #aac;
+    margin-bottom: 0.4em;
+}
+```
+
+Usage:
+
+```
+<$simple-outline text={{MyOutline}} class="outline"
+  detail-template="My Detail Template"/>
+```

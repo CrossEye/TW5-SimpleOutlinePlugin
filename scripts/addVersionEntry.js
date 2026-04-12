@@ -45,6 +45,36 @@ const key         = sortKey(version);
 const downloadUrl = `${ghPagesBase}/${version}/`;
 const heading     = `!!! [[${version}|${downloadUrl}]] - ${date} <small>([[${shortHash}|${commitUrl}]])</small>`;
 
+// Split the commit message into a summary line and optional body.
+// Normalise bullet lists in the body: convert leading '- ' to '* ' and
+// ensure a blank line precedes the first item of each bullet run.
+function formatBody(text) {
+  const lines = text.split('\n');
+  const out   = [];
+  for (const line of lines) {
+    const norm     = /^- /.test(line) ? '* ' + line.slice(2) : line;
+    const isBullet = norm.startsWith('* ');
+    if (isBullet) {
+      const prev        = out.length > 0 ? out[out.length - 1] : null;
+      const prevIsBullet = prev !== null && prev.startsWith('* ');
+      if (prev !== null && prev !== '' && !prevIsBullet) {
+        out.push('');
+      }
+    }
+    out.push(norm);
+  }
+  return out.join('\n').trim();
+}
+
+const msgLines  = message.split('\n');
+const firstLine = msgLines[0].trim();
+const bodyText  = msgLines.slice(1).join('\n').trim();
+const body      = bodyText ? formatBody(bodyText) : '';
+
+const entry = body
+  ? `${heading}\n\n<details>\n<summary>''${firstLine}''</summary><div>\n\n${body}\n\n</div></details>\n\n----------\n`
+  : `${heading}\n\n''${firstLine}''\n\n----------\n`;
+
 let content;
 if (!fs.existsSync(filepath)) {
   content = [
@@ -61,7 +91,7 @@ if (!fs.existsSync(filepath)) {
   if (!content.endsWith('\n')) content += '\n';
 }
 
-content += `${heading}\n\n${message}\n\n----------\n`;
+content += entry;
 
 fs.writeFileSync(filepath, content, 'utf8');
 console.log(`Updated ${filename}`);

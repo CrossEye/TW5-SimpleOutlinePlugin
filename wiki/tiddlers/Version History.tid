@@ -1,10 +1,13 @@
-title: Version History
-tags: TableOfContents
 caption: Version History
+created: 20260412124124821
+modified: 20260412131354899
+tags: TableOfContents
+title: Version History
+type: text/vnd.tiddlywiki
 
-Current version: {{{[$:/plugins/crosseye/simple-outline]get[version]}}}
+!! Current version: <$text text={{{ [[$:/plugins/crosseye/simple-outline]get[version]] }}} />
 
-!!! Downloads
+!! Downloads
 
 <div class="so-version-links">
 <$list filter="[tag[so-version]has[download]sort[sort-key]]">
@@ -12,8 +15,8 @@ Current version: {{{[$:/plugins/crosseye/simple-outline]get[version]}}}
 </$list>
 </div>
 
-!!! Changelog
+!! Changelog
 
 <$list filter="[tag[so-version]sort[sort-key]reverse[]]">
-<$transclude/>
+<$transclude $mode="block" />
 </$list>

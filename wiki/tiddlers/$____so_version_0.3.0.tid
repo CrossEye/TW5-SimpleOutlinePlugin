@@ -1,0 +1,15 @@
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.3.0/
+sort-key: 000003000
+tags: so-version
+title: $:/_/so/version/0.3.0
+type: text/vnd.tiddlywiki
+version: 0.3.0
+
+!!! [[0.3.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.3.0/]] - 2026-04-12 <small>([[eb53d66|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/eb53d66d0616b44d8e050ee1450180d5b31a5c84]])</small>
+
+Overview tiddler written and renamed to "Simple Outline Plugin", draggable
+multi-tiddler link for the WikiText Reference demo, template and CSS tiddlers
+moved to $:/_/so/ namespace, created/modified fields stripped from content
+tiddlers.
+
+----------

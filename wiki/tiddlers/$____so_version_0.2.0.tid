@@ -1,0 +1,14 @@
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/
+sort-key: 000002000
+tags: so-version
+title: $:/_/so/version/0.2.0
+type: text/vnd.tiddlywiki
+version: 0.2.0
+
+!!! [[0.2.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.2.0/]] - 2026-04-12 <small>([[4c40eab|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/4c40eabb35dc327c33b32754ce400db0f25befc1]])</small>
+
+detail-template attribute, session-persistent open/closed state, single-span
+CSS rotation arrows, custom stylesheet moved to standalone tiddler, demos
+and docs polished, History of Computing custom stylesheet removed.
+
+----------

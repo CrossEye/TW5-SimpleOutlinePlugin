@@ -28,6 +28,7 @@ jobs:
         env:
           COMMIT_HASH: ${{ github.sha }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          COMMIT_DATE: ${{ github.event.head_commit.timestamp }}
           REPO: ${{ github.repository }}
 
       - name: Build docs
@@ -37,7 +38,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "docs: build for ${{ github.sha }}"
-          file_pattern: "docs/ wiki/tiddlers/$__-_so_version_*.tid"
+          file_pattern: "docs/ wiki/tiddlers/$____so_version_*.tid"
           commit_user_name: github-actions[bot]
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
 

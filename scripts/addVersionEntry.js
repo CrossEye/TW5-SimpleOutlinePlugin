@@ -14,6 +14,9 @@ const fullHash    = process.env.COMMIT_HASH;
 const shortHash   = fullHash ? fullHash.slice(0, 7) : 'unknown';
 const commitUrl   = repo ? `https://github.com/${repo}/commit/${fullHash}` : '#';
 const message     = (process.env.COMMIT_MESSAGE || '').trim();
+const date        = process.env.COMMIT_DATE
+  ? process.env.COMMIT_DATE.slice(0, 10)
+  : new Date().toISOString().slice(0, 10);
 
 // Compute sort key: pad each semver segment to 3 digits, append pre-release if present
 function sortKey(ver) {
@@ -29,9 +32,9 @@ function sortKey(ver) {
 }
 
 // Encode a tiddler title to its TW5 filesystem filename
-// Rules (observed from existing files): _ → -, : → _, / → _
+// TW5 rule: : → _, / → _, _ stays as _
 function tidFilename(title) {
-  return title.replace(/_/g, '-').replace(/:/g, '_').replace(/\//g, '_') + '.tid';
+  return title.replace(/:/g, '_').replace(/\//g, '_') + '.tid';
 }
 
 const tiddlerTitle = `$:/_/so/version/${version}`;
@@ -40,6 +43,7 @@ const filepath     = path.join(ROOT, 'wiki', 'tiddlers', filename);
 
 const key         = sortKey(version);
 const downloadUrl = `${ghPagesBase}/${version}/`;
+const heading     = `!!! [[${version}|${downloadUrl}]] - ${date} <small>([[${shortHash}|${commitUrl}]])</small>`;
 
 let content;
 if (!fs.existsSync(filepath)) {
@@ -50,17 +54,14 @@ if (!fs.existsSync(filepath)) {
     `sort-key: ${key}`,
     `download: ${downloadUrl}`,
     ``,
-    `!!! ${version}`,
-    ``,
     ``,
   ].join('\n');
 } else {
   content = fs.readFileSync(filepath, 'utf8');
-  // Ensure trailing newline before appending
   if (!content.endsWith('\n')) content += '\n';
 }
 
-content += `[[${shortHash}|${commitUrl}]]: ${message}\n\n`;
+content += `${heading}\n\n${message}\n\n----------\n`;
 
 fs.writeFileSync(filepath, content, 'utf8');
 console.log(`Updated ${filename}`);

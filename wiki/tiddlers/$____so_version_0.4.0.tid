@@ -20,3 +20,8 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/
 </div></details>
 
 ----------
+!!! [[0.4.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/]] - 2026-04-12 <small>([[9b5cefd|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/9b5cefd93fccdb26d941186444a2dfbda3a7b8d4]])</small>
+
+''chore: ignore TW session tiddlers, remove from index''
+
+----------

@@ -1,6 +1,6 @@
 {
   "name": "tw5-simple-outline-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TiddlyWiki 5 plugin providing a simple collapsible outline widget",
   "scripts": {
     "start": "tiddlywiki wiki --listen port=6543"

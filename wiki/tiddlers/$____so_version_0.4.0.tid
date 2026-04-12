@@ -6,6 +6,12 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/
 
 !!! [[0.4.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/]]
 
+!!!! Commit [[9b5cefd|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/9b5cefd93fccdb26d941186444a2dfbda3a7b8d4]] (2026-04-12)
+
+```
+chore: ignore TW session tiddlers, remove from index
+```
+
 !!!! Commit [[281f8cd|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/281f8cd1609d534d6abcdcf8c7eccefd835dadeb]] (2026-04-12)
 
 ```
@@ -19,10 +25,5 @@ About page, plugin tabs, version-history system tiddler, README update
 * Normalise bullet lists (- → *) and insert blank lines before runs in addVersionEntry.js
 * Update README: detail-template attribute, session state, dev workflow, installation
 ```
-
-----------
-!!! [[0.4.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/]] - 2026-04-12 <small>([[9b5cefd|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/9b5cefd93fccdb26d941186444a2dfbda3a7b8d4]])</small>
-
-''chore: ignore TW session tiddlers, remove from index''
 
 ----------

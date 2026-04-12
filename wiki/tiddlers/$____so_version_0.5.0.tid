@@ -1,0 +1,15 @@
+title: $:/_/so/version/0.5.0
+tags: so-version
+version: 0.5.0
+sort-key: 000005000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.5.0/
+
+!!! [[0.5.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.5.0/]]
+
+!!!! Commit [[a3f3067|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/a3f306729c5af6aaac6da4437022c32fef0cf53d]] (2026-04-12)
+
+```
+Merge branch 'main' of https://github.com/CrossEye/TW5-SimpleOutlinePlugin
+```
+
+----------

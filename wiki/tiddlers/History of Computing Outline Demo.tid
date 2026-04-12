@@ -1,10 +1,11 @@
-title: History of Computing Outline Demo
-tags: TableOfContents [[Simple Outline Demo]]
 caption: History of Computing
+tags: TableOfContents [[Simple Outline Demo]]
+title: History of Computing Outline Demo
+type: text/vnd.tiddlywiki
 
-A personal knowledge management example with 4–5 levels of nesting. Uses a custom `history-outline` class (blue accents, filled triangles) layered on top of the default `outline` style.
+A personal knowledge management example with 4–5 levels of nesting.
 
-<$simple-outline class="outline history-outline" text="""
+<$simple-outline class="outline" text="""
 !! Theoretical Foundations
 
   Mathematical Precursors

@@ -2,7 +2,9 @@ title: Acts 7 Outline Demo
 tags: TableOfContents [[Simple Outline Demo]]
 caption: Acts 7 Outline
 
-<$simple-outline class="outline outline-acts" summary-template="Acts 7 Summary Template" text="""
+Demonstrates the `summary-template` attribute with a custom CSS class. The `outline-acts` class replaces the default arrow with a red `+`/`–` toggle placed directly after each label.
+
+<$simple-outline class="outline outline-acts" summary-template="$:/_/so/templates/acts-7-summary" text="""
 !! General information
 
   + proof inclusio gloria

@@ -1,0 +1,17 @@
+tags: TableOfContents [[Simple Outline Demo]]
+title: Detail Template Test Demo
+type: text/vnd.tiddlywiki
+
+Demonstrates the ''detail-template'' attribute, which controls how expanded tiddler content is rendered.  The template below adds a linked title above each entry's body.
+
+<$simple-outline class="outline" detail-template="$:/_/so/templates/detail-test" text="""
+!! Theoretical Foundations
+
+  Mathematical Precursors
+    + note-boole-algebra
+    + note-babbage-engine
+
+  Computability Theory
+    + note-turing-machines
+    + note-church-lambda
+"""/>

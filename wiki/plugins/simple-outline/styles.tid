@@ -21,9 +21,21 @@ tags: $:/tags/Stylesheet
 .outline .level-9  { margin-left: 9em; }
 .outline .level-10 { margin-left: 10em; }
 
-.outline details summary {
-	margin-top: 2px;
+.outline details > summary {
+	display: flex;
+	align-items: center;
+	list-style: none;        /* suppress native marker */
 	cursor: pointer;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.outline details > summary::-webkit-details-marker {
+	display: none;           /* suppress native marker (WebKit) */
+}
+
+.outline details {
+	margin-top: 3px;
 }
 
 .outline div {
@@ -31,13 +43,28 @@ tags: $:/tags/Stylesheet
 }
 
 .outline div.item {
-	margin-top: -0.5em;
-	margin-bottom: -0.5em;
+	margin-top: 2px;
 }
 
-/* Native browser ▶/▼ disclosure triangle on the left; add a little padding */
-.outline details > summary {
-	padding-left: 4px;
+/* Single .so-arrow span — toc-closed-icon SVG rendered inside; CSS rotates it
+   90° when open.  One node instead of two avoids show/hide index complexity. */
+.outline .so-arrow {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	width: 0.85em;
+	height: 0.85em;
+	margin-right: 4px;
+	transition: transform 0.15s ease;
+}
+
+.outline .so-arrow svg {
+	width: 0.85em;
+	height: 0.85em;
+}
+
+.outline details[open] > summary > .so-arrow {
+	transform: rotate(90deg);
 }
 
 .outline h2 {
@@ -92,36 +119,16 @@ tags: $:/tags/Stylesheet
 
 .outline .thingraydk { color: #888; }
 
-/*-- outline-acts: red +/– toggle on the right via summary-template ---------*/
-/* Usage: class="outline outline-acts"                                        */
-/*   summary-template="Acts 7 Summary Template"                               */
-/* Template renders: <span class="so-label"><<so-label>></span>               */
-/*                   <span class="so-toggle"></span>                           */
-
-/* Hide the native left-side disclosure triangle */
-.outline-acts details > summary {
-	list-style: none;
-	display: flex;
-	align-items: baseline;
+/*-- so-detail-title: linked tiddler title inside detail-template content ----*/
+.outline .so-detail-title {
+	display: block;
+	font-weight: bold;
+	color: #33c;
+	text-decoration: none;
+	border-bottom: 1px solid #aac;
+	margin-bottom: 0.4em;
 }
 
-.outline-acts details > summary::-webkit-details-marker {
-	display: none;
-}
-
-/* Toggle sits directly after label text */
-.outline-acts .so-toggle::before {
-	content: '+';
-	color: #b10;
-	font-size: 18pt;
-	padding-left: 8px;
-}
-
-.outline-acts details[open] > summary .so-toggle::before {
-	content: '–';
-}
-
-.outline-acts h2 {
-	color: #b10;
-	font-size: 18pt;
+.outline .so-detail-title:hover {
+	text-decoration: underline;
 }

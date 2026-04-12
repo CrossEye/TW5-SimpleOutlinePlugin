@@ -32,6 +32,24 @@ summary-template:
     currentTiddler — the item tiddler title
     so-label       — the pre-computed label (summary → caption → display fallback)
   When absent, so-label is used as plain text.
+
+detail-template:
+  Title of a tiddler to render as the expanded body for tiddler items.
+  The same two variables are set: currentTiddler and so-label.
+  When absent, the tiddler's own body is transcluded directly.
+
+Disclosure arrows:
+  Each collapsible <summary> receives two child spans:
+    .so-arrow-closed  — rendered via <<toc-closed-icon>> ($:/core/images/right-arrow)
+    .so-arrow-open    — rendered via <<toc-open-icon>>   ($:/core/images/down-arrow)
+  CSS controls visibility based on details[open].  Custom styles that supply
+  their own arrow mechanism should hide both spans with display:none !important.
+
+Session state:
+  Open/closed state is stored in tiddlers under $:/state/simple-outline/<qualification>/<path>
+  using the same <<qualification>> variable the core TOC macros use.  Path segments
+  are the node label or tiddler title, so state survives reordering.  Navigating
+  away and back restores the tree to the same open/closed positions.
 \*/
 (function() {
 "use strict";
@@ -80,6 +98,21 @@ function extract(node) {
 	};
 }
 
+//-- Parse tree node helpers --------------------------------------------------
+
+function macroAttr(name) {
+	return {type: "macro", value: {name: name, params: []}};
+}
+
+function transcludeNode(tiddlerAttr, isBlock) {
+	return {
+		type: "transclude",
+		attributes: {tiddler: tiddlerAttr},
+		isBlock: !!isBlock,
+		children: []
+	};
+}
+
 //-- Widget -------------------------------------------------------------------
 
 var SimpleOutlineWidget = function(parseTreeNode, options) {
@@ -97,7 +130,10 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	// summaryTargets: [{label, tiddlerTitle, domNode}]
 	// Filled during the tree walk when summary-template is in use.
 	this.summaryTargets = [];
-	// contentTargets: [{tiddlerTitle, domNode}]
+	// iconTargets: [{closedDomNode, openDomNode}]
+	// One entry per collapsible node; child widgets render the TW arrow icons.
+	this.iconTargets = [];
+	// contentTargets: [{tiddlerTitle, label, domNode}]
 	// Filled for every tiddler item that has expandable content.
 	this.contentTargets = [];
 
@@ -105,6 +141,16 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	if(this.summaryTemplate) {
 		this.referencedTiddlers.push(this.summaryTemplate);
 	}
+	this.detailTemplate = this.getAttribute("detail-template", "");
+	if(this.detailTemplate) {
+		this.referencedTiddlers.push(this.detailTemplate);
+	}
+
+	// Base path for state tiddlers.  <<qualification>> is a per-rendering-context
+	// hash that the core TOC macros also use, ensuring instances in different
+	// tiddlers don't share state.
+	var qualification = this.getVariable("qualification", {defaultValue: ""});
+	this.stateBase = "$:/state/simple-outline" + qualification;
 
 	var container = this.document.createElement("div");
 	container.className = this.getAttribute("class", "outline");
@@ -112,17 +158,18 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	var text = this.getAttribute("text", "");
 	if(text.trim()) {
 		var tree = makeChildren(sanitize(text)).map(extract);
-		this.renderTree(tree, container, 0);
+		this.renderTree(tree, container, 0, "");
 	}
 
 	parent.insertBefore(container, nextSibling);
 	this.domNodes.push(container);
 
-	// Build one combined parse tree and create all child widgets in a single
-	// makeChildWidgets call.  summaryTargets come first (indices 0..s-1),
-	// contentTargets follow (indices s..end).
+	// Build allNodes and allDomNodes in parallel so we can render each child
+	// widget into the right DOM node regardless of how many nodes each target
+	// contributes (summary targets = 1 node, icon targets = 2, content = 1).
 	var self = this;
-	var allNodes = [];
+	var allNodes    = [];
+	var allDomNodes = [];
 
 	this.summaryTargets.forEach(function(t) {
 		// Wrap in two $set nodes so the template sees currentTiddler and so-label.
@@ -138,34 +185,44 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 					name:  {type: "string", value: "so-label"},
 					value: {type: "string", value: t.label}
 				},
-				children: [{
-					type: "transclude",
-					attributes: {
-						tiddler: {type: "string", value: self.summaryTemplate}
-					},
-					isBlock: false,
-					children: []
-				}]
+				children: [transcludeNode({type: "string", value: self.summaryTemplate}, false)]
 			}]
 		});
+		allDomNodes.push(t.domNode);
+	});
+
+	this.iconTargets.forEach(function(t) {
+		allNodes.push(transcludeNode(macroAttr("toc-closed-icon"), false));
+		allDomNodes.push(t.arrowDomNode);
 	});
 
 	this.contentTargets.forEach(function(t) {
-		allNodes.push({
-			type: "transclude",
-			attributes: {
-				tiddler: {type: "string", value: t.tiddlerTitle}
-			},
-			isBlock: true,
-			children: []
-		});
+		if(self.detailTemplate) {
+			allNodes.push({
+				type: "set",
+				attributes: {
+					name:  {type: "string", value: "currentTiddler"},
+					value: {type: "string", value: t.tiddlerTitle}
+				},
+				children: [{
+					type: "set",
+					attributes: {
+						name:  {type: "string", value: "so-label"},
+						value: {type: "string", value: t.label}
+					},
+					children: [transcludeNode({type: "string", value: self.detailTemplate}, true)]
+				}]
+			});
+		} else {
+			allNodes.push(transcludeNode({type: "string", value: t.tiddlerTitle}, true));
+		}
+		allDomNodes.push(t.domNode);
 	});
 
 	if(allNodes.length) {
 		this.makeChildWidgets(allNodes);
-		var allTargets = this.summaryTargets.concat(this.contentTargets);
 		this.children.forEach(function(child, i) {
-			child.render(allTargets[i].domNode, null);
+			child.render(allDomNodes[i], null);
 		});
 	}
 };
@@ -179,6 +236,8 @@ SimpleOutlineWidget.prototype.refresh = function(changedTiddlers) {
 	// Re-render the whole outline if a referenced tiddler changed structurally
 	// (e.g. text went from empty to non-empty, or tiddler appeared/disappeared,
 	// or the summary-template tiddler itself changed).
+	// State tiddlers ($:/state/simple-outline/...) are intentionally NOT in
+	// referencedTiddlers — toggling a node must not trigger a full re-render.
 	var needsRefresh = this.referencedTiddlers.some(function(title) {
 		return !!changedTiddlers[title];
 	});
@@ -192,18 +251,50 @@ SimpleOutlineWidget.prototype.refresh = function(changedTiddlers) {
 
 //-- Tree rendering -----------------------------------------------------------
 
-SimpleOutlineWidget.prototype.renderTree = function(nodes, parent, level) {
+SimpleOutlineWidget.prototype.renderTree = function(nodes, parent, level, path) {
 	var self = this;
 	nodes.forEach(function(node) {
-		self.renderNode(node, parent, level);
+		self.renderNode(node, parent, level, path);
 	});
 };
 
-SimpleOutlineWidget.prototype.renderNode = function(node, parent, level) {
-	var self   = this;
-	var cls    = "level-" + level;
-	var doc    = this.document;
-	var el, summary, contentDiv, p, h2;
+// Add a single .so-arrow span to a <summary> element and register it as an
+// icon target.  CSS rotates the icon 90° when details[open] — no show/hide.
+SimpleOutlineWidget.prototype.addArrows = function(summary) {
+	var arrow = this.document.createElement("span");
+	arrow.className = "so-arrow";
+	summary.appendChild(arrow);
+	this.iconTargets.push({arrowDomNode: arrow});
+};
+
+// Wire up session-state persistence for a <details> element.
+// stateTitle is a qualified tiddler title unique to this node's position.
+// On render: restore open attribute from the state tiddler if present.
+// On toggle: write/delete the state tiddler (does NOT trigger full re-render
+// because state tiddlers are not in referencedTiddlers).
+SimpleOutlineWidget.prototype.wireState = function(el, stateTitle) {
+	var wiki = this.wiki;
+	if(wiki.getTiddlerText(stateTitle, "") === "open") {
+		el.setAttribute("open", "");
+	}
+	el.addEventListener("toggle", function() {
+		if(el.open) {
+			wiki.setText(stateTitle, "text", null, "open");
+		} else {
+			wiki.deleteTiddler(stateTitle);
+		}
+	});
+};
+
+SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
+	var self       = this;
+	var cls        = "level-" + level;
+	var doc        = this.document;
+	// Use node label or tiddler title as path segment — stable across reordering.
+	var key        = node.tidLink ? node.tiddler : node.value;
+	var nodePath   = path + "/" + key;
+	var stateTitle = this.stateBase + nodePath;
+	var el, summary, contentDiv, p, h2, labelSpan, toggleSpan;
 
 	if(node.children.length) {
 		if(node.header) {
@@ -213,27 +304,32 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level) {
 			h2 = doc.createElement("h2");
 			h2.textContent = node.value;
 			el.appendChild(h2);
-			self.renderTree(node.children, el, level + 1);
+			self.renderTree(node.children, el, level + 1, nodePath);
 		} else {
 			// Plain group node — collapsible
 			el = doc.createElement("details");
 			el.className = cls;
+			self.wireState(el, stateTitle);
 			summary = doc.createElement("summary");
+			self.addArrows(summary);
 			if(self.summaryTemplate) {
 				// Mirror the so-label/so-toggle structure the template produces,
 				// so the same CSS rules apply to group nodes.
-				var labelSpan = doc.createElement("span");
+				labelSpan = doc.createElement("span");
 				labelSpan.className = "so-label";
 				labelSpan.textContent = node.value;
-				var toggleSpan = doc.createElement("span");
+				toggleSpan = doc.createElement("span");
 				toggleSpan.className = "so-toggle";
 				summary.appendChild(labelSpan);
 				summary.appendChild(toggleSpan);
 			} else {
-				summary.textContent = node.value;
+				labelSpan = doc.createElement("span");
+				labelSpan.className = "so-label";
+				labelSpan.textContent = node.value;
+				summary.appendChild(labelSpan);
 			}
 			el.appendChild(summary);
-			self.renderTree(node.children, el, level + 1);
+			self.renderTree(node.children, el, level + 1, nodePath);
 		}
 		parent.appendChild(el);
 
@@ -250,20 +346,23 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level) {
 		if(hasContent) {
 			el = doc.createElement("details");
 			el.className = cls;
+			self.wireState(el, stateTitle);
 			summary = doc.createElement("summary");
-			// If a summary-template is set, the template will be rendered into
-			// this summary element by the child widget machinery below; otherwise
-			// just set plain text.
+			self.addArrows(summary);
 			if(self.summaryTemplate) {
+				// Template renders its own label structure; register for child widget.
 				self.summaryTargets.push({label: label, tiddlerTitle: node.tiddler, domNode: summary});
 			} else {
-				summary.textContent = label;
+				labelSpan = doc.createElement("span");
+				labelSpan.className = "so-label";
+				labelSpan.textContent = label;
+				summary.appendChild(labelSpan);
 			}
 			el.appendChild(summary);
 			contentDiv = doc.createElement("div");
 			contentDiv.className = "ltgraybox";
 			el.appendChild(contentDiv);
-			self.contentTargets.push({tiddlerTitle: node.tiddler, domNode: contentDiv});
+			self.contentTargets.push({tiddlerTitle: node.tiddler, label: label, domNode: contentDiv});
 		} else {
 			el = doc.createElement("div");
 			el.className = cls + " item";

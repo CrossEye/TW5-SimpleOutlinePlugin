@@ -1,7 +1,67 @@
-created: 20250318115542936
-modified: 20260412020131239
 tags: TableOfContents
-title: Overview
+title: Simple Outline Plugin
 type: text/vnd.tiddlywiki
 
-TODO
+!! What It Does
+
+The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a collapsible, nested outline from a plain-text description.  Each node can reference a tiddler — when the tiddler has body text, the node becomes expandable and shows that content inline.  Open/closed state is preserved for the duration of the session.
+
+!! Installation
+
+Drag [[$:/plugins/crosseye/simple-outline]] tiddler to any TW5 wiki (version 5.3.0 or later) and save.
+
+!! Usage
+
+```
+<$simple-outline text="""
+!! Section heading
+
+  Group label
+    + tiddler-name
+    + display text :: tiddler-title
+
+  Another group
+    + another-tiddler
+""" class="outline"/>
+```
+
+The `text` attribute holds the outline description.  You can also supply it via transclusion: `text={{MyOutlineTiddler}}`.
+
+!!! Input format
+
+|!Syntax |!Meaning |
+|`!! Heading` |Section header (renders as `<h2>`) |
+|`+ tiddler-name` |Tiddler reference — expandable if the tiddler has body text |
+|`label :: tiddler-name` |Override the display label for a tiddler reference |
+|Plain text |Structural group — collapsible if it has children |
+|Indentation |Nesting — each extra level of leading spaces is one level deeper |
+
+!!! Label resolution
+
+For tiddler references, the displayed label is taken from the first of these fields that exists: `summary` → `caption` → the name as written.
+
+!!! Attributes
+
+|!Attribute |!Default |!Purpose |
+|`text` |— |The outline description (required) |
+|`class` |`outline` |CSS class(es) on the container `<div>` |
+|`summary-template` |— |Tiddler to render inside each `<summary>` element; receives `currentTiddler` and `so-label` variables |
+|`detail-template` |— |Tiddler to render as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` variables |
+
+!! The Demos
+
+!!! [[History of Computing Outline Demo]]
+
+A personal knowledge management example showing 4–5 levels of nesting.  Each `+ note-*` entry references a real tiddler with a `summary` field (used as the label) and body text (shown when expanded).  This is the most straightforward use of the plugin: write your outline, create your note tiddlers, and the structure takes care of itself.
+
+!!! [[Acts 7 Outline Demo]]
+
+Shows the `summary-template` attribute in action.  The template renders a custom label-plus-toggle structure, and the `outline-acts` CSS class replaces the default arrow icon with a red `+`/`–` toggle positioned directly after each label.  This demo illustrates how the default styling can be overridden entirely through CSS and a small template tiddler — no changes to the plugin are needed.
+
+!!! [[Detail Template Test Demo]]
+
+Shows the `detail-template` attribute in action.  Instead of transcluding a tiddler's body text directly, the plugin renders the named template tiddler with `currentTiddler` and `so-label` set.  The template here adds a linked title above the body so the reader can navigate to the source tiddler directly.
+
+!!! [[WikiText Reference Outline Demo]]
+
+Demonstrates that the outline structure stands on its own even when the referenced tiddlers don't exist locally.  The entry names are real tiddler titles from [[tiddlywiki.com|https://tiddlywiki.com]] — drag the plugin to a wiki that has those tiddlers and the content will appear automatically.  No tiddlers were harmed in the creation of this outline.

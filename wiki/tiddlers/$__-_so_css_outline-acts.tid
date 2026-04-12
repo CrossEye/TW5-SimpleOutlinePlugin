@@ -1,0 +1,39 @@
+title: $:/_/so/css/outline-acts
+type: text/css
+tags: $:/tags/Stylesheet
+
+/*-- outline-acts: red +/– toggle on the right via summary-template ---------*/
+/* Usage: class="outline outline-acts"                                        */
+/*   summary-template="$:/_/so/templates/acts-7-summary"                     */
+/* Template renders: <span class="so-label"><<so-label>></span>               */
+/*                   <span class="so-toggle"></span>                           */
+
+/* Hide the native left-side disclosure triangle and the default icon arrows */
+.outline-acts details > summary {
+	list-style: none;
+	display: flex;
+	align-items: baseline;
+}
+
+.outline-acts details > summary::-webkit-details-marker {
+	display: none;
+}
+
+.outline-acts .so-arrow { display: none !important; }
+
+/* Toggle sits directly after label text */
+.outline-acts .so-toggle::before {
+	content: '+';
+	color: #b10;
+	font-size: 18pt;
+	padding-left: 8px;
+}
+
+.outline-acts details[open] > summary .so-toggle::before {
+	content: '–';
+}
+
+.outline-acts h2 {
+	color: #b10;
+	font-size: 18pt;
+}

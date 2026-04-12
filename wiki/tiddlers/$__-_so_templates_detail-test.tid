@@ -1,0 +1,5 @@
+title: $:/_/so/templates/detail-test
+
+<$link to=<<currentTiddler>> class="so-detail-title"><<currentTiddler>></$link>
+<$transclude $tiddler=<<currentTiddler>> $mode="block"/>
+<div class="so-detail-tags"><$list filter="[<currentTiddler>tags[]]"><$text text=<<currentTiddler>>/> </$list></div>

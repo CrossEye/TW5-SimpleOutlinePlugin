@@ -1,6 +1,7 @@
-title: WikiText Reference Outline Demo
-tags: TableOfContents [[Simple Outline Demo]]
 caption: WikiText Reference
+tags: [[Simple Outline Demo]] TableOfContents $:/tags/SideBar
+title: WikiText Reference Outline Demo
+type: text/vnd.tiddlywiki
 
 This outline uses the native browser disclosure triangles (the default style) and references [[tiddlywiki.com|https://tiddlywiki.com]] documentation tiddlers directly — drag the plugin to any TW5 wiki to see it populated with live content.
 

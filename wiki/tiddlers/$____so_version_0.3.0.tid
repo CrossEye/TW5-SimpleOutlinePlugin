@@ -13,3 +13,17 @@ moved to $:/_/so/ namespace, created/modified fields stripped from content
 tiddlers.
 
 ----------
+!!! [[0.3.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.3.0/]] - 2026-04-12 <small>([[d09ad24|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/d09ad24b226e981647d8978b9f0ebde3ee3acdcd]])</small>
+
+fix: version tiddler format, download field, retroactive docs, workflow filename fix
+
+- Rewrite version tiddlers 0.1.0-0.3.0 with heading format matching user's convention:
+  [[version|downloadUrl]] - date <small>([[hash|commitUrl]])</small>
+- Add download field to all three tiddlers (fixes Version History download links)
+- Rename tiddler files from $__-_so_ to $____so_ (correct TW5 encoding)
+- Fix addVersionEntry.js: correct filename encoding, new heading format, date field
+- Fix GA file_pattern to match corrected filenames
+- Add COMMIT_DATE env var to GA so entries show the commit date
+- Build retroactive docs/0.1.0/ and docs/0.2.0/ from current snapshot
+
+----------

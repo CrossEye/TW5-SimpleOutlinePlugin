@@ -35,3 +35,7 @@ out/
 # yarn.lock
 # pnpm-lock.yaml
 
+# TiddlyWiki session state (changes on every save; not meaningful to track)
+wiki/tiddlers/$__Import.tid
+wiki/tiddlers/$__StoryList.tid
+

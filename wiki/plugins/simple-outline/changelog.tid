@@ -1,6 +1,5 @@
-created: 20260412143902566
-modified: 20260412191046319
-title: Changelog
+caption: Changelog
+title: $:/plugins/crosseye/simple-outline/changelog
 type: text/vnd.tiddlywiki
 
 <$list filter="[tag[so-version]sort[sort-key]reverse[]]">

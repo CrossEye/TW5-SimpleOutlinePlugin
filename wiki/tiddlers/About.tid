@@ -8,4 +8,4 @@ The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a c
 
 ''Current version: <$text text={{{ [[$:/plugins/crosseye/simple-outline]get[version]] }}} />''
 
-[[Changelog]]
+[[Changelog|$:/plugins/crosseye/simple-outline/changelog]]

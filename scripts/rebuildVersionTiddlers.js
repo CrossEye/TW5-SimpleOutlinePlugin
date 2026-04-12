@@ -91,10 +91,12 @@ for (const c of commits) {
 // 3. Write one tiddler per version
 
 for (const [version, vCommits] of byVersion) {
-  const tiddlerTitle = `$:/_/so/version/${version}`;
-  const filename     = tidFilename(tiddlerTitle);
-  const filepath     = path.join(ROOT, 'wiki', 'tiddlers', filename);
-  const key          = sortKey(version);
+  const tiddlerTitle  = `$:/_/so/version/${version}`;
+  const filename      = tidFilename(tiddlerTitle);
+  const versionsDir   = path.join(ROOT, 'wiki', 'plugins', 'simple-outline', 'versions');
+  const filepath      = path.join(versionsDir, filename);
+  fs.mkdirSync(versionsDir, { recursive: true });
+  const key           = sortKey(version);
   const downloadUrl  = `${ghPagesBase}/${version}/`;
 
   const fields = [

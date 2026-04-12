@@ -1,0 +1,47 @@
+title: History of Computing Outline Demo
+tags: TableOfContents [[Simple Outline Demo]]
+caption: History of Computing
+
+A personal knowledge management example with 4–5 levels of nesting. Uses a custom `history-outline` class (blue accents, filled triangles) layered on top of the default `outline` style.
+
+<$simple-outline class="outline history-outline" text="""
+!! Theoretical Foundations
+
+  Mathematical Precursors
+    + note-boole-algebra
+    + note-babbage-engine
+
+  Computability Theory
+    Formal Models
+      + note-turing-machines
+      + note-church-lambda
+    Limits of Computation
+      + note-goedel-incompleteness
+      + note-halting-problem
+
+!! The First Machines (1940s)
+
+  + note-colossus
+  + note-eniac
+
+  Stored-Program Concept
+    + note-von-neumann-architecture
+    + note-manchester-baby
+
+!! Operating Systems
+
+  Academic Origins
+    + note-multics
+    Bell Labs Breakaway
+      + note-unix-origins
+      + note-c-language
+      + note-thompson-ritchie
+
+!! The GUI
+
+  Xerox PARC
+    + note-xerox-alto
+    + note-smalltalk-kay
+  Commercial Adoption
+    + note-lisa-and-mac
+"""/>

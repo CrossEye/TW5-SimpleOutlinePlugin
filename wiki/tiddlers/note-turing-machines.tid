@@ -1,0 +1,5 @@
+title: note-turing-machines
+summary: Turing's 1936 abstract model of computation — a read/write head on an infinite tape — used to answer Hilbert's Entscheidungsproblem
+tags: HistoryOfComputing
+
+Introduced in "On Computable Numbers, with an Application to the Entscheidungsproblem" (1936). The model is deliberately minimal: a finite set of states, an infinite tape of cells, and rules for reading, writing, and moving. Its power comes from the proof that //anything computable at all// can be computed this way. The concept of a Universal Turing Machine — one that can simulate any other — is the theoretical basis for the stored-program computer.

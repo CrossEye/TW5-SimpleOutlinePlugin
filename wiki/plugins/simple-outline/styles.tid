@@ -1,0 +1,127 @@
+title: $:/plugins/crosseye/simple-outline/styles
+type: text/css
+tags: $:/tags/Stylesheet
+
+/*-- simple-outline: default styles -----------------------------------------*/
+
+.outline {
+	font-family: 'Encode Sans', sans-serif;
+	font-size: 13pt;
+}
+
+.outline .level-0  { margin-left: 0; }
+.outline .level-1  { margin-left: 1em; }
+.outline .level-2  { margin-left: 2em; }
+.outline .level-3  { margin-left: 3em; }
+.outline .level-4  { margin-left: 4em; }
+.outline .level-5  { margin-left: 5em; }
+.outline .level-6  { margin-left: 6em; }
+.outline .level-7  { margin-left: 7em; }
+.outline .level-8  { margin-left: 8em; }
+.outline .level-9  { margin-left: 9em; }
+.outline .level-10 { margin-left: 10em; }
+
+.outline details summary {
+	margin-top: 2px;
+	cursor: pointer;
+}
+
+.outline div {
+	margin-top: 1em;
+}
+
+.outline div.item {
+	margin-top: -0.5em;
+	margin-bottom: -0.5em;
+}
+
+/* Native browser ▶/▼ disclosure triangle on the left; add a little padding */
+.outline details > summary {
+	padding-left: 4px;
+}
+
+.outline h2 {
+	font-weight: bold;
+	font-size: 1.3em;
+	padding: 2px 5px;
+	margin-top: 0.8em;
+}
+
+.outline .ltgraybox {
+	display: block;
+	background-color: #f1f1f5;
+	padding: 10px 10px 5px 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	color: #000;
+}
+
+.outline table {
+	border: 1px solid #dddddd;
+	width: auto;
+	max-width: 100%;
+	caption-side: bottom;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.outline .altsand td {
+	padding: 10px;
+	border: 1px solid #aaa;
+	vertical-align: top;
+}
+
+.outline .altsand tr:nth-child(odd)  td { background-color: #F1F1D6; }
+.outline .altsand tr:nth-child(even) td { background-color: #F7F7E7; }
+
+.outline ul {
+	list-style: none;
+}
+
+.outline ul li::before {
+	content: "•";
+	color: #33f;
+	font-size: 140%;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -0.8em;
+	width: 0.8em;
+}
+
+.outline .thingraydk { color: #888; }
+
+/*-- outline-acts: red +/– toggle on the right via summary-template ---------*/
+/* Usage: class="outline outline-acts"                                        */
+/*   summary-template="Acts 7 Summary Template"                               */
+/* Template renders: <span class="so-label"><<so-label>></span>               */
+/*                   <span class="so-toggle"></span>                           */
+
+/* Hide the native left-side disclosure triangle */
+.outline-acts details > summary {
+	list-style: none;
+	display: flex;
+	align-items: baseline;
+}
+
+.outline-acts details > summary::-webkit-details-marker {
+	display: none;
+}
+
+/* Toggle sits directly after label text */
+.outline-acts .so-toggle::before {
+	content: '+';
+	color: #b10;
+	font-size: 18pt;
+	padding-left: 8px;
+}
+
+.outline-acts details[open] > summary .so-toggle::before {
+	content: '–';
+}
+
+.outline-acts h2 {
+	color: #b10;
+	font-size: 18pt;
+}

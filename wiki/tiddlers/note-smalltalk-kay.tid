@@ -1,0 +1,5 @@
+title: note-smalltalk-kay
+summary: Alan Kay's Smalltalk (1972) at Xerox PARC — the first fully object-oriented language and environment, and the origin of the modern GUI
+tags: HistoryOfComputing
+
+Kay's vision was a "Dynabook" — a personal computer for children that was also a universal medium of creative expression. Smalltalk was the language designed for it: everything is an object, computation happens by sending messages between objects, and the programming environment itself is written in Smalltalk and live-modifiable. The Alto's GUI was built in Smalltalk. Kay received the Turing Award in 2003; his 1972 memo "A Personal Computer for Children of All Ages" reads as a remarkably accurate prediction of the tablet era.

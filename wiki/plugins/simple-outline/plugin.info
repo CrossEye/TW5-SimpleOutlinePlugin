@@ -1,0 +1,8 @@
+{
+    "title": "$:/plugins/crosseye/simple-outline",
+    "description": "Simple collapsible outline widget using details/summary elements",
+    "author": "Scott Sauyet",
+    "version": "0.1.0",
+    "core-version": ">=5.1.0",
+    "plugin-type": "plugin"
+}

@@ -1,0 +1,61 @@
+title: WikiText Reference Outline Demo
+tags: TableOfContents [[Simple Outline Demo]]
+caption: WikiText Reference
+
+This outline uses the native browser disclosure triangles (the default style) and references [[tiddlywiki.com|https://tiddlywiki.com]] documentation tiddlers directly — drag the plugin to any TW5 wiki to see it populated with live content.
+
+<$simple-outline text="""
+!! Writing Text
+
+  Basic Formatting
+    + Paragraphs in WikiText
+    + Headings in WikiText
+    + Formatting in WikiText
+    + Dashes in WikiText
+    + Hard Linebreaks in WikiText
+
+  Lists & Tables
+    + Lists in WikiText
+    + Description Lists in WikiText
+    + Tables in WikiText
+    + Block Quotes in WikiText
+
+  Code & Special Content
+    + Code Blocks in WikiText
+    + HTML in WikiText
+    + Typed Blocks in WikiText
+    + HTML Entities
+
+!! Links & Images
+
+  + Linking in WikiText
+  + Images in WikiText
+
+!! Dynamic Content
+
+  Variables & Macros
+    + Variables
+    + Macro Definitions
+    + Macro Calls
+    Procedures (TW 5.3+)
+      + Procedure Definitions
+      + Procedure Calls
+      + Procedure Parameter Handling
+
+  Transclusion
+    + Transclusion in WikiText
+    + Transclusion and Substitution
+    + Visible Transclusions
+
+  Widgets
+    + Widgets in WikiText
+    + Conditional Shortcut Syntax
+    + WikiText Parser Modes
+
+  Attribute Types
+    + Literal Attribute Values
+    + Substituted Attribute Values
+    + Filtered Attribute Values
+    + Transcluded Attribute Values
+    + Variable Attribute Values
+"""/>

@@ -1,0 +1,33 @@
+status: complete
+title: $:/Import
+type: text/vnd.tiddlywiki
+
+The following tiddlers were imported:
+
+# [[Overview]]
+# [[$:/_/my/config/ViewTemplateTitleFilters/caption]]
+# [[$:/_/my/core/ui/ViewTemplate/title/caption]]
+# [[$:/_/my/layouts/move-to-top]]
+# [[$:/_/my/meta/tiddlers/filter]]
+# [[$:/config/AnimationDuration]]
+# [[$:/config/DefaultMoreSidebarTab]]
+# [[$:/config/DefaultSidebarTab]]
+# [[$:/config/PageControlButtons/Visibility/$:/core/ui/Buttons/home]]
+# [[$:/config/PageControlButtons/Visibility/$:/core/ui/Buttons/more-page-actions]]
+# [[$:/config/PageControlButtons/Visibility/$:/core/ui/Buttons/permaview]]
+# [[$:/config/Tiddlers/TitleLinks]]
+# [[$:/config/Toolbar/ButtonClass]]
+# [[$:/config/ViewToolbarButtons/Visibility/$:/core/ui/Buttons/permalink]]
+# [[$:/language/Tiddler/DateFormat]]
+# [[$:/tags/SideBar]]
+# [[$:/tags/ViewTemplateTitleFilter]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/bodyfontsize]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/sidebarbreakpoint]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/sidebarwidth]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/storyright]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/storywidth]]
+# [[$:/themes/tiddlywiki/vanilla/metrics/tiddlerwidth]]
+# [[$:/themes/tiddlywiki/vanilla/options/sidebarlayout]]
+# [[$:/themes/tiddlywiki/vanilla/options/stickytitles]]
+# [[TableOfContents]]
+# [[$:/layout]]

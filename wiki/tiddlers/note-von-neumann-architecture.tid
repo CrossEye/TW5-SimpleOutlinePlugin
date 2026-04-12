@@ -1,0 +1,5 @@
+title: note-von-neumann-architecture
+summary: The stored-program architecture (1945) — program instructions and data share the same memory, enabling software
+tags: HistoryOfComputing
+
+The "First Draft of a Report on the EDVAC" (1945), attributed primarily to von Neumann though developed with Eckert and Mauchly, described the key insight: storing the program in the same memory as the data means a computer can modify its own instructions and be reprogrammed without physical rewiring. This is the architecture that all general-purpose computers still use today. The authorship dispute with Eckert and Mauchly was one of computing's first priority controversies.

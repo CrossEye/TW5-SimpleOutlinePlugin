@@ -1,0 +1,5 @@
+title: note-boole-algebra
+summary: Boole's algebraic system treating logical propositions as mathematical values (1847)
+tags: HistoryOfComputing
+
+George Boole's //The Mathematical Analysis of Logic// (1847) and //An Investigation of the Laws of Thought// (1854) established that logical operations could be expressed algebraically using only two values. Shannon later showed (1937) that Boolean algebra maps directly onto electrical switching circuits, making it the mathematical foundation of all digital hardware.

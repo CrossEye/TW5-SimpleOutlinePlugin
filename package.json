@@ -1,0 +1,28 @@
+{
+  "name": "tw5-simple-outline-plugin",
+  "version": "0.1.0",
+  "description": "TiddlyWiki 5 plugin providing a simple collapsible outline widget",
+  "scripts": {
+    "start": "tiddlywiki wiki --listen port=6543"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrossEye/TW5-SimpleOutlinePlugin.git"
+  },
+  "keywords": [
+    "tiddlywiki",
+    "tiddlywiki5",
+    "plugin",
+    "outline",
+    "widget"
+  ],
+  "author": "Scott Sauyet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CrossEye/TW5-SimpleOutlinePlugin/issues"
+  },
+  "homepage": "https://github.com/CrossEye/TW5-SimpleOutlinePlugin#readme",
+  "dependencies": {
+    "tiddlywiki": "^5.3.8"
+  }
+}

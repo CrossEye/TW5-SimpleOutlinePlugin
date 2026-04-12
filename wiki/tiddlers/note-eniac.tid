@@ -1,0 +1,5 @@
+title: note-eniac
+summary: ENIAC (1945) — the first general-purpose electronic computer, built at the University of Pennsylvania to calculate artillery firing tables
+tags: HistoryOfComputing
+
+Completed in 1945 by Eckert and Mauchly. Contained 18,000 vacuum tubes and could perform 5,000 additions per second — a thousand times faster than electromechanical machines. It was not a stored-program computer: programs were entered by reconfiguring cables and switches, a process that took days. The later EDVAC design (by von Neumann, Eckert, and Mauchly) introduced the stored-program concept.

@@ -1,0 +1,5 @@
+title: note-goedel-incompleteness
+summary: Gödel's incompleteness theorems (1931) — any consistent formal system powerful enough to describe arithmetic contains true statements it cannot prove
+tags: HistoryOfComputing
+
+The First Incompleteness Theorem (1931) showed that Hilbert's programme of formalising all of mathematics was impossible. The proof technique — encoding statements about a system //within// that system — directly inspired Turing's diagonal argument for the halting problem. The theorems established fundamental limits on what formal systems (and by extension, computers) can decide.

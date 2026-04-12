@@ -1,0 +1,56 @@
+title: Acts 7 Outline Demo
+tags: TableOfContents [[Simple Outline Demo]]
+caption: Acts 7 Outline
+
+<$simple-outline class="outline outline-acts" summary-template="Acts 7 Summary Template" text="""
+!! General information
+
+  + proof inclusio gloria
+  + proof identifying with hearers
+  + proof no xn elements
+  + proof stuff not in AT
+  + proof list OT refs
+
+!! Themes
+
+  + proof God act outside Israel
+  + proof themes opposition
+  + proof themes lack of recognition
+
+!! 7.2
+
+  + proof 7.2 no answer
+  + proof Haran or Ur?
+
+!! 7.7
+
+  + proof 7.7 Messing with Exodus quote
+
+!! 7.8
+
+  + proof 7.8 setup for 7.51
+  + proof Abe omissions
+
+!! 7.15-16
+
+  + proof where buried?
+
+!! 7.17-20
+
+  + proof parallels Moses and Jesus
+
+!! 7.37
+
+  + proof raise up in Dt 18
+
+!! Nesting demo
+
+  Another level
+    Even deeper
+      + proof 7.2 no answer
+      + proof Haran or Ur?
+      More here
+        + proof list OT refs
+  One more for good measure
+    + proof where buried?
+"""/>

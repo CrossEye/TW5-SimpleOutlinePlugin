@@ -1,0 +1,5 @@
+title: note-colossus
+summary: British codebreaking machine (1944) — the first large-scale electronic computer, built to break the Lorenz cipher
+tags: HistoryOfComputing
+
+Designed by Tommy Flowers at Bletchley Park. Unlike Turing's electromechanical Bombe (which broke Enigma), Colossus was fully electronic, using vacuum tubes instead of relays, and was therefore far faster. It was not a general-purpose computer — it was hardwired for a specific cryptanalytic task — but it demonstrated that large-scale electronic computation was practical. Its existence was kept secret until the 1970s.

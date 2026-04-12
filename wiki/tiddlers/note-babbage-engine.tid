@@ -1,0 +1,5 @@
+title: note-babbage-engine
+summary: Babbage's mechanical Difference Engine and Analytical Engine — the first designs for a general-purpose computer (1820s–1840s)
+tags: HistoryOfComputing
+
+The Difference Engine (1822) was designed to tabulate polynomial functions mechanically. The later Analytical Engine (1837) was more significant: it had a separate mill (CPU) and store (memory), was Turing-complete in principle, and could be programmed with punched cards. Ada Lovelace's notes on the Analytical Engine are often cited as the first algorithm intended for machine execution. Neither was completed in Babbage's lifetime; the Difference Engine No. 2 was finally built by the Science Museum London in 1991.

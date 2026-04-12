@@ -1,0 +1,22 @@
+title: $:/_/so/version/0.4.0
+tags: so-version
+version: 0.4.0
+sort-key: 000004000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/
+
+!!! [[0.4.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.4.0/]] - 2026-04-12 <small>([[281f8cd|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/281f8cd1609d534d6abcdcf8c7eccefd835dadeb]])</small>
+
+<details>
+<summary>''v0.4.0: About page, plugin tabs, version-history system tiddler, README update''</summary><div>
+
+* Add About tiddler (TOC) transcluding $:/_/so/version-history
+* Move Version History content to system tiddler $:/_/so/version-history
+* Add plugin tabs: readme, installation, usage (with CSS hooks and template samples), license
+* Add list field to plugin.info so tabs appear in plugin browser
+* Reformat version changelog entries as collapsible <details> blocks in addVersionEntry.js
+* Normalise bullet lists (- → *) and insert blank lines before runs in addVersionEntry.js
+* Update README: detail-template attribute, session state, dev workflow, installation
+
+</div></details>
+
+----------

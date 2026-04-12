@@ -1,0 +1,60 @@
+name: Build & Release Docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    # Skip commits made by this action to prevent infinite loops
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for tagging, releases, and commit-back
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history needed for generate-release-notes
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+
+      - name: Write version tiddler entry
+        run: node scripts/addVersionEntry.js
+        env:
+          COMMIT_HASH: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          REPO: ${{ github.repository }}
+
+      - name: Build docs
+        run: npm run release
+
+      - name: Commit docs and version tiddler back
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: build for ${{ github.sha }}"
+          file_pattern: "docs/ wiki/tiddlers/$__-_so_version_*.tid"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Check whether this version warrants a tag
+        id: tag-check
+        run: node scripts/shouldTag.js
+
+      - name: Create git tag
+        if: steps.tag-check.outputs.should-tag == 'true'
+        run: |
+          git tag ${{ steps.tag-check.outputs.tag }}
+          git push origin ${{ steps.tag-check.outputs.tag }}
+
+      - name: Create GitHub Release
+        if: steps.tag-check.outputs.should-tag == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag-check.outputs.tag }}
+          name: ${{ steps.tag-check.outputs.tag }}
+          generate_release_notes: true

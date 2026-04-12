@@ -119,6 +119,9 @@ tags: $:/tags/Stylesheet
 
 .outline .thingraydk { color: #888; }
 
+/*-- so-version-links: inline download link list on Version History page -----*/
+.so-version-links a { margin-right: 0.6em; }
+
 /*-- so-detail-title: linked tiddler title inside detail-template content ----*/
 .outline .so-detail-title {
 	display: block;

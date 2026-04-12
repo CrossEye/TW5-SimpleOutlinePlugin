@@ -1,0 +1,9 @@
+title: $:/_/so/version/0.3.0
+tags: so-version
+version: 0.3.0
+sort-key: 000003000
+
+!!! 0.3.0
+
+[[eb53d66|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/eb53d66d0616b44d8e050ee1450180d5b31a5c84]]: v0.3.0: Overview polish — draggable WikiText link, tiddler rename
+

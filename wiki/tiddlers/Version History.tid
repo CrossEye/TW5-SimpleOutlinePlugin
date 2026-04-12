@@ -1,0 +1,19 @@
+title: Version History
+tags: TableOfContents
+caption: Version History
+
+Current version: {{{[$:/plugins/crosseye/simple-outline]get[version]}}}
+
+!!! Downloads
+
+<div class="so-version-links">
+<$list filter="[tag[so-version]has[download]sort[sort-key]]">
+<$link to={{!!download}}>{{!!version}}</$link>
+</$list>
+</div>
+
+!!! Changelog
+
+<$list filter="[tag[so-version]sort[sort-key]reverse[]]">
+<$transclude/>
+</$list>

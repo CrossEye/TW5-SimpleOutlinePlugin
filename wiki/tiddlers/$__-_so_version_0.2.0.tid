@@ -1,0 +1,9 @@
+title: $:/_/so/version/0.2.0
+tags: so-version
+version: 0.2.0
+sort-key: 000002000
+
+!!! 0.2.0
+
+[[4c40eab|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/4c40eabb35dc327c33b32754ce400db0f25befc1]]: v0.2.0: detail-template, session state, arrow icons, demo polish
+

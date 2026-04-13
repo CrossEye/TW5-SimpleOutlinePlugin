@@ -47,6 +47,7 @@ For tiddler references, the displayed label comes from the first non-empty value
 |`tiddler-link-label` |`✳` |Glyph or text for the `tiddler-link` (only used when `tiddler-link` is set) |
 |`open-depth` |`0` |Levels to open by default on first render (0 = all closed) |
 |`label-fields` |`summary caption` |Space-separated field names tried in order to compute the display label |
+|`state` |— |Explicit prefix for state tiddlers; makes state persistent and addressable across rendering contexts |
 
 !! CSS Hooks
 
@@ -184,3 +185,39 @@ The link sits inside `<summary>` at the trailing edge (pushed right by `margin-l
 ```
 
 Style the link with `.so-tiddler-link` in CSS.
+
+!! state
+
+By default each outline instance gets its own isolated state prefix derived from `<<qualification>>`, so open/closed positions are per-rendering-context and reset when the wiki is reloaded.  Supply an explicit `state` prefix to make state persistent and addressable:
+
+```
+<$simple-outline text={{MyOutline}} state="$:/my-wiki/outline/main"/>
+```
+
+With a known prefix, the `so-collapse` macro (see below) can target the outline from any button, and the same open/closed state is shared between outlines that use the same value.
+
+!! so-collapse
+
+The plugin provides a `<<so-collapse>>` procedure that collapses an entire outline by deleting all its state tiddlers:
+
+```
+\procedure my-collapse-button()
+<$button>
+  Collapse all
+  <<so-collapse "$:/my-wiki/outline/main">>
+</$button>
+\end
+```
+
+The argument must match the `state` attribute on the target outline.  Without an explicit `state`, the auto-generated prefix is not easily known to external code.
+
+!! Keyboard navigation
+
+Every collapsible outline supports keyboard navigation via the standard tree key contract.  Click or tab into any item to start, then:
+
+|!Key |!Action |
+|`↓` / `↑` |Move focus to next / previous visible item |
+|`→` |Expand a closed node; move focus to first child if already open |
+|`←` |Collapse an open node; move focus to parent if already closed |
+|`Home` / `End` |Jump to first / last visible item |
+|`Enter` / `Space` |Toggle (handled natively by `<details>`) |

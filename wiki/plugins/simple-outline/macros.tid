@@ -1,0 +1,6 @@
+title: $:/plugins/crosseye/simple-outline/macros
+tags: $:/tags/Macro
+
+\procedure so-collapse(state)
+<$action-deletetiddler $filter="[prefix<state>]"/>
+\end

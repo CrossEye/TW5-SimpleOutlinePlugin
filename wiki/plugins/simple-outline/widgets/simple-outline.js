@@ -70,6 +70,20 @@ label-fields:
   outline's display text is the final fallback.
   Default: "summary caption" (preserves prior behaviour).
 
+so-collapse macro:
+  <<so-collapse state>> deletes all state tiddlers with the given prefix,
+  collapsing every node in an outline that uses that state prefix.  Requires
+  the `state` attribute to be set to a known value so the prefix is addressable.
+  Defined in $:/plugins/crosseye/simple-outline/macros.
+
+Keyboard navigation:
+  The container div receives a keydown listener.  Standard tree contract:
+    ArrowDown/Up — next/previous visible summary
+    ArrowRight   — expand closed node; move to first child if already open
+    ArrowLeft    — collapse open node; move to parent summary if already closed
+    Home/End     — first/last visible summary
+  Enter/Space are handled natively by <details>.
+
 Disclosure arrows:
   Each collapsible <summary> receives two child spans:
     .so-arrow-closed  — rendered via <<toc-closed-icon>> ($:/core/images/right-arrow)
@@ -77,11 +91,19 @@ Disclosure arrows:
   CSS controls visibility based on details[open].  Custom styles that supply
   their own arrow mechanism should hide both spans with display:none !important.
 
+state:
+  Optional explicit prefix for state tiddlers.  When supplied, the same prefix
+  is used regardless of which tiddler the outline is rendered in, making state
+  persistent across page loads and shared between outlines that use the same
+  value.  When absent, a per-instance prefix derived from <<qualification>> is
+  used (default behaviour: each rendering context gets isolated state).
+
 Session state:
-  Open/closed state is stored in tiddlers under $:/state/simple-outline/<qualification>/<path>
-  using the same <<qualification>> variable the core TOC macros use.  Path segments
-  are the node label or tiddler title, so state survives reordering.  Navigating
-  away and back restores the tree to the same open/closed positions.
+  Open/closed state is stored in tiddlers under <stateBase>/<path> where
+  stateBase is either the explicit `state` attribute or the auto-generated
+  $:/state/simple-outline/<qualification> prefix.  Path segments are the node
+  label or tiddler title, so state survives reordering.  Navigating away and
+  back restores the tree to the same open/closed positions.
 \*/
 (function() {
 "use strict";
@@ -174,6 +196,8 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	// contentTargets: [{tiddlerTitle, label, domNode}]
 	// Filled for every tiddler item that has expandable content.
 	this.contentTargets = [];
+	// focusables: [<summary> elements] in document order for keyboard navigation.
+	this.focusables = [];
 
 	this.summaryTemplate = this.getAttribute("summary-template", "");
 	if(this.summaryTemplate) {
@@ -197,11 +221,14 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	var labelFieldsAttr = this.getAttribute("label-fields", "summary caption");
 	this.labelFields = labelFieldsAttr.trim().split(/\s+/).filter(Boolean);
 
-	// Base path for state tiddlers.  <<qualification>> is a per-rendering-context
-	// hash that the core TOC macros also use, ensuring instances in different
-	// tiddlers don't share state.
+	// Base path for state tiddlers.  If the caller supplies an explicit `state`
+	// attribute, use it as-is (persistent / shareable across rendering contexts).
+	// Otherwise fall back to the auto-generated per-instance prefix that uses
+	// <<qualification>> — the same hash the core TOC macros use — so each
+	// rendering context gets its own isolated state by default.
+	var stateAttr    = this.getAttribute("state", "");
 	var qualification = this.getVariable("qualification", {defaultValue: ""});
-	this.stateBase = "$:/state/simple-outline" + qualification;
+	this.stateBase   = stateAttr || ("$:/state/simple-outline" + qualification);
 
 	var container = this.document.createElement("div");
 	container.className = this.getAttribute("class", "outline");
@@ -214,6 +241,15 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 
 	parent.insertBefore(container, nextSibling);
 	this.domNodes.push(container);
+
+	// Keyboard navigation — delegate from the container so a single listener
+	// covers the whole outline regardless of how many nodes it has.
+	if(this.focusables.length) {
+		var self0 = this;
+		container.addEventListener("keydown", function(e) {
+			self0.handleKeydown(e);
+		});
+	}
 
 	// Build allNodes and allDomNodes in parallel so we can render each child
 	// widget into the right DOM node regardless of how many nodes each target
@@ -335,13 +371,14 @@ SimpleOutlineWidget.prototype.renderTree = function(nodes, parent, level, path) 
 	});
 };
 
-// Add a single .so-arrow span to a <summary> element and register it as an
-// icon target.  CSS rotates the icon 90° when details[open] — no show/hide.
+// Add a single .so-arrow span to a <summary> element, register it as an icon
+// target, and record the summary in focusables for keyboard navigation.
 SimpleOutlineWidget.prototype.addArrows = function(summary) {
 	var arrow = this.document.createElement("span");
 	arrow.className = "so-arrow";
 	summary.appendChild(arrow);
 	this.iconTargets.push({arrowDomNode: arrow});
+	this.focusables.push(summary);
 };
 
 // Wire up session-state persistence for a <details> element.
@@ -355,6 +392,8 @@ SimpleOutlineWidget.prototype.wireState = function(el, stateTitle, defaultOpen) 
 	if(existing === "open" || (defaultOpen && existing === "")) {
 		el.setAttribute("open", "");
 	}
+	// Store stateTitle on the element so the keyboard handler can find it.
+	el.dataset.soState = stateTitle;
 	el.addEventListener("toggle", function() {
 		if(el.open) {
 			wiki.setText(stateTitle, "text", null, "open");
@@ -362,6 +401,108 @@ SimpleOutlineWidget.prototype.wireState = function(el, stateTitle, defaultOpen) 
 			wiki.deleteTiddler(stateTitle);
 		}
 	});
+};
+
+// Keyboard navigation handler (delegated from the container div).
+// Implements the standard tree keyboard contract:
+//   ArrowDown/Up  — move focus to next/previous visible summary
+//   ArrowRight    — expand closed node; move to first child if already open
+//   ArrowLeft     — collapse open node; move to parent if already closed
+//   Home/End      — first/last focusable summary
+// Enter/Space are already handled natively by <details>.
+SimpleOutlineWidget.prototype.handleKeydown = function(e) {
+	var focusables = this.focusables;
+	if(!focusables.length) return;
+
+	// Find the currently focused summary.
+	var active = this.document.activeElement;
+	var idx    = focusables.indexOf(active);
+
+	// Helper: find the next VISIBLE summary starting from startIdx in direction
+	// +1 or -1.  A summary is always visible inside its own <details> (even when
+	// that details is closed — the summary IS the clickable header).  It becomes
+	// invisible only when a GRANDPARENT-OR-HIGHER <details> is closed, so we
+	// start the ancestor walk one level above the immediate parent.
+	function nextVisible(startIdx, dir) {
+		var i = startIdx;
+		while(i >= 0 && i < focusables.length) {
+			var s       = focusables[i];
+			var visible = true;
+			var node    = s.parentNode ? s.parentNode.parentNode : null;
+			while(node) {
+				if(node.tagName === "DETAILS" && !node.open) { visible = false; break; }
+				node = node.parentNode;
+			}
+			if(visible) return i;
+			i += dir;
+		}
+		return -1;
+	}
+
+	var key = e.key;
+	if(key === "ArrowDown" || key === "ArrowUp") {
+		e.preventDefault();
+		if(idx === -1) {
+			// Nothing focused yet — jump to first/last visible.
+			var fi = nextVisible(key === "ArrowDown" ? 0 : focusables.length - 1,
+			                     key === "ArrowDown" ? 1 : -1);
+			if(fi !== -1) focusables[fi].focus();
+		} else {
+			var ni = nextVisible(idx + (key === "ArrowDown" ? 1 : -1),
+			                     key === "ArrowDown" ? 1 : -1);
+			if(ni !== -1) focusables[ni].focus();
+		}
+
+	} else if(key === "ArrowRight") {
+		if(idx === -1) return;
+		e.preventDefault();
+		var details = active.parentNode;
+		if(details && details.tagName === "DETAILS") {
+			if(!details.open) {
+				// Expand.
+				details.open = true;
+				var st = details.dataset.soState;
+				if(st) this.wiki.setText(st, "text", null, "open");
+			} else {
+				// Already open — move focus to first visible child.
+				var ci = nextVisible(idx + 1, 1);
+				if(ci !== -1) focusables[ci].focus();
+			}
+		}
+
+	} else if(key === "ArrowLeft") {
+		if(idx === -1) return;
+		e.preventDefault();
+		var details = active.parentNode;
+		if(details && details.tagName === "DETAILS") {
+			if(details.open) {
+				// Collapse.
+				details.open = false;
+				var st = details.dataset.soState;
+				if(st) this.wiki.deleteTiddler(st);
+			} else {
+				// Already closed — move focus to parent summary.
+				var ancestor = details.parentNode;
+				while(ancestor) {
+					if(ancestor.tagName === "DETAILS") {
+						var pi = focusables.indexOf(ancestor.querySelector(":scope > summary"));
+						if(pi !== -1) { focusables[pi].focus(); break; }
+					}
+					ancestor = ancestor.parentNode;
+				}
+			}
+		}
+
+	} else if(key === "Home") {
+		e.preventDefault();
+		var fi = nextVisible(0, 1);
+		if(fi !== -1) focusables[fi].focus();
+
+	} else if(key === "End") {
+		e.preventDefault();
+		var fi = nextVisible(focusables.length - 1, -1);
+		if(fi !== -1) focusables[fi].focus();
+	}
 };
 
 SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {

@@ -1,0 +1,29 @@
+title: $:/_/so/version/0.8.0
+tags: so-version
+version: 0.8.0
+sort-key: 000008000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.8.0/
+
+!!! [[0.8.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.8.0/]]
+
+!!!! Commit [[3385bde|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/3385bde6a9fdb502eaa82947a9f480fcdf98228d]] (2026-04-12)
+
+```
+group-template, header-template, tiddler-link; two new demos
+
+* Add group-template attribute — full TW widget power inside group <summary>
+  elements; receives so-label only (no currentTiddler for group nodes)
+* Add header-template attribute — replaces default <h2> in !! section headers;
+  receives so-label only
+* Add tiddler-link / tiddler-link-label attributes — adds a link inline after
+  each tiddler item's label; opens the tiddler without toggling the node via
+  stopPropagation; visible in both collapsed and expanded states
+* Fix summary arrow alignment for multi-line labels: align-items: flex-start
+  plus margin-top: 0.2em on .so-arrow pins the arrow to the first-line midpoint
+* Add Tiddler Link Demo: shows tiddler-link + open-depth together
+* Add Styled Outline Demo: shows group-template and header-template; group
+  template conditionally renders a description field from a matching tiddler
+* Update Simple Outline Plugin overview: full attribute table, new demo sections
+```
+
+----------

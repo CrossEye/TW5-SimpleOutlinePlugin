@@ -1,13 +1,14 @@
-caption: History of Computing
-created: 20260413235051035
-modified: 20260413235051035
-tags: TableOfContents [[Simple Outline Demo]]
-title: History of Computing Outline Demo
+created: 20260413235453029
+modified: 20260413235455111
+tags: TableOfContents
+title: Expand Collapse Demo
 type: text/vnd.tiddlywiki
 
-A personal knowledge management example with 4–5 levels of nesting.
+Demonstrates the `state` attribute with `<<so-expand>>` and `<<so-collapse>>` buttons.  The `state` prefix is a stable, known tiddler path, so the buttons can target the outline from anywhere and open/closed positions persist across page reloads.
 
-<$simple-outline class="outline" text="""
+<$button>Expand all<<so-expand "$:/demos/history-outline">></$button> <$button>Collapse all<<so-collapse "$:/demos/history-outline">></$button>
+
+<$simple-outline class="outline" state="$:/demos/history-outline" text="""
 !! Theoretical Foundations
 
   Mathematical Precursors

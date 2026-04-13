@@ -29,6 +29,7 @@ Each line of the `text` attribute describes one node:
 |`!! Heading` |Section header — renders as `<h2>` |
 |`+ tiddler-name` |Tiddler reference — expands to show its body if it exists |
 |`display text :: tiddler-name` |Same, with an explicit label instead of the tiddler title |
+|`++ filter-expression` |Filter — expands to one tiddler item per result at render time |
 |Plain text |Structural group — collapsible if it has children |
 |Indentation |Each extra indent level (leading spaces) is one nesting level deeper |
 
@@ -196,16 +197,14 @@ By default each outline instance gets its own isolated state prefix derived from
 
 With a known prefix, the `so-collapse` macro (see below) can target the outline from any button, and the same open/closed state is shared between outlines that use the same value.
 
-!! so-collapse
+!! so-expand / so-collapse
 
-The plugin provides a `<<so-collapse>>` procedure that collapses an entire outline by deleting all its state tiddlers:
+The plugin provides `<<so-expand>>` and `<<so-collapse>>` procedures to expand or collapse an entire outline at once.  Both work by walking the outline's DOM, setting every `<details>` open or closed, and writing or deleting the corresponding state tiddlers.
 
 ```
-\procedure my-collapse-button()
-<$button>
-  Collapse all
-  <<so-collapse "$:/my-wiki/outline/main">>
-</$button>
+\procedure my-outline-controls()
+<$button>Expand all  <<so-expand  "$:/my-wiki/outline/main">></$button>
+<$button>Collapse all<<so-collapse "$:/my-wiki/outline/main">></$button>
 \end
 ```
 
@@ -221,3 +220,18 @@ Every collapsible outline supports keyboard navigation via the standard tree key
 |`←` |Collapse an open node; move focus to parent if already closed |
 |`Home` / `End` |Jump to first / last visible item |
 |`Enter` / `Space` |Toggle (handled natively by `<details>`) |
+
+!! ++ filter expressions
+
+A line beginning with `++` is a filter expression.  At render time the filter is evaluated against the live TW store and each matching tiddler is rendered as a regular tiddler item — identical to writing a `+` line for every result.
+
+```
+<$simple-outline text="""
+!! My Notes
+  ++ [tag[reading-notes]sort[title]]
+"""/>
+```
+
+Filter items respond to all the same attributes as static items: `label-fields`, `summary-template`, `detail-template`, `tiddler-link`, and `open-depth` all apply.
+
+Because filter results can change as tiddlers are added, edited, or deleted, outlines containing `++` lines automatically re-render when any tiddler outside the outline's own state namespace changes.  (State tiddlers — which record open/closed positions — are excluded so that toggling a node does not trigger a re-render.)

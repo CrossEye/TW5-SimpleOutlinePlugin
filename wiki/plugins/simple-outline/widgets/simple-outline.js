@@ -22,6 +22,7 @@ Usage:
 Input format:
   !! prefix    → section header (h2)
   + prefix     → tiddler reference (reads summary/caption + text fields)
+  ++ prefix    → filter expression — expands to tiddler items at render time
   plain text   → structural group node (collapsible if it has children)
   indentation  → nesting (children are indented under their parent)
   :: separator → display text :: tiddler title (overrides display label)
@@ -70,11 +71,15 @@ label-fields:
   outline's display text is the final fallback.
   Default: "summary caption" (preserves prior behaviour).
 
-so-collapse macro:
-  <<so-collapse state>> deletes all state tiddlers with the given prefix,
-  collapsing every node in an outline that uses that state prefix.  Requires
-  the `state` attribute to be set to a known value so the prefix is addressable.
-  Defined in $:/plugins/crosseye/simple-outline/macros.
+so-expand / so-collapse macros:
+  <<so-expand state>> and <<so-collapse state>> expand or collapse every node
+  in an outline by walking its DOM container, setting each <details> open or
+  closed, and writing or deleting the corresponding state tiddlers.  Both
+  require the `state` attribute to be set to a known value.  Implemented as
+  <$action-so-expand> and <$action-so-collapse> action widgets (defined below);
+  the macros in $:/plugins/crosseye/simple-outline/macros wrap them for
+  convenience.  The container <div> stores its state prefix in
+  data-so-outline-state so the action widgets can find it.
 
 Keyboard navigation:
   The container div receives a keydown listener.  Standard tree contract:
@@ -137,18 +142,33 @@ function makeNode(str) {
 }
 
 function extract(node) {
-	var v       = node.value;
-	var header  = v.startsWith("!!");
-	var tidLink = v.startsWith("+");
-	var content = v.slice(tidLink ? 1 : header ? 2 : 0).trim();
-	var parts   = content.split("::").map(function(s) { return s.trim(); });
+	var v          = node.value;
+	var header     = v.startsWith("!!");
+	var filterLink = v.startsWith("++");
+	var tidLink    = !filterLink && v.startsWith("+");
+	var content    = v.slice(filterLink ? 2 : tidLink ? 1 : header ? 2 : 0).trim();
+	if(filterLink) {
+		return {
+			value:      content,
+			header:     false,
+			tidLink:    false,
+			isFilter:   true,
+			filterExpr: content,
+			display:    "",
+			tiddler:    "",
+			children:   [] // Phase A: filter nodes have no sub-children
+		};
+	}
+	var parts = content.split("::").map(function(s) { return s.trim(); });
 	return {
-		value:    content,
-		header:   header,
-		tidLink:  tidLink,
-		display:  parts[0],
-		tiddler:  parts.length > 1 ? parts[1] : parts[0],
-		children: node.children.map(extract)
+		value:      content,
+		header:     header,
+		tidLink:    tidLink,
+		isFilter:   false,
+		filterExpr: "",
+		display:    parts[0],
+		tiddler:    parts.length > 1 ? parts[1] : parts[0],
+		children:   node.children.map(extract)
 	};
 }
 
@@ -198,6 +218,9 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	this.contentTargets = [];
 	// focusables: [<summary> elements] in document order for keyboard navigation.
 	this.focusables = [];
+	// hasFilterNodes: true if any ++ filter line was encountered during renderTree.
+	// Triggers broader refresh logic so filter results stay up to date.
+	this.hasFilterNodes = false;
 
 	this.summaryTemplate = this.getAttribute("summary-template", "");
 	if(this.summaryTemplate) {
@@ -232,6 +255,8 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 
 	var container = this.document.createElement("div");
 	container.className = this.getAttribute("class", "outline");
+	// Store state prefix so <$action-so-expand> / <$action-so-collapse> can find this container.
+	container.dataset.soOutlineState = this.stateBase;
 
 	var text = this.getAttribute("text", "");
 	if(text.trim()) {
@@ -357,6 +382,20 @@ SimpleOutlineWidget.prototype.refresh = function(changedTiddlers) {
 	if(needsRefresh) {
 		this.refreshSelf();
 		return true;
+	}
+	// If the outline contains ++ filter nodes, any tiddler change outside this
+	// outline's own state namespace might affect the filter results — re-render.
+	// (Blunt but correct; state tiddlers under stateBase are excluded so that
+	// node toggles don't cause an unnecessary full re-render.)
+	if(this.hasFilterNodes) {
+		var stateBase = this.stateBase;
+		var filterNeedsRefresh = Object.keys(changedTiddlers).some(function(t) {
+			return t.indexOf(stateBase) !== 0;
+		});
+		if(filterNeedsRefresh) {
+			this.refreshSelf();
+			return true;
+		}
 	}
 	// Otherwise let the transclude children refresh themselves in place.
 	return this.refreshChildren(changedTiddlers);
@@ -631,6 +670,26 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		}
 		parent.appendChild(el);
 
+	} else if(node.isFilter) {
+		// ++ filter expression — evaluate and render each result as a tiddler item.
+		self.hasFilterNodes = true;
+		var filterResults = self.wiki.filterTiddlers(node.filterExpr, self);
+		// Use the filter expression as a path segment so state tiddlers don't
+		// collide with manually specified + items at the same level.
+		var filterPath = path + "/++:" + node.filterExpr;
+		filterResults.forEach(function(title) {
+			self.renderNode({
+				value:      title,
+				header:     false,
+				tidLink:    true,
+				isFilter:   false,
+				filterExpr: "",
+				display:    title,
+				tiddler:    title,
+				children:   []
+			}, parent, level, filterPath);
+		});
+
 	} else {
 		// Plain label (leaf, no + prefix)
 		el = doc.createElement("div");
@@ -641,5 +700,66 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 };
 
 exports["simple-outline"] = SimpleOutlineWidget;
+
+//-- Action widgets -----------------------------------------------------------
+
+// Shared DOM walk: find all <details data-so-state> within every container
+// whose data-so-outline-state matches `state`, then open or close each one
+// and write / delete the corresponding state tiddler.
+function soOutlineAction(widget, expand) {
+	var state = widget.getAttribute("state", "");
+	if(!state) return;
+	var doc = widget.document;
+	if(!doc || !doc.querySelectorAll) return;
+	var containers = doc.querySelectorAll("[data-so-outline-state]");
+	for(var i = 0; i < containers.length; i++) {
+		if(containers[i].dataset.soOutlineState !== state) continue;
+		var detailsEls = containers[i].querySelectorAll("details[data-so-state]");
+		for(var j = 0; j < detailsEls.length; j++) {
+			var el = detailsEls[j];
+			if(expand) {
+				el.open = true;
+				widget.wiki.setText(el.dataset.soState, "text", null, "open");
+			} else {
+				el.open = false;
+				widget.wiki.deleteTiddler(el.dataset.soState);
+			}
+		}
+	}
+}
+
+var ActionSoExpandWidget = function(parseTreeNode, options) {
+	this.initialise(parseTreeNode, options);
+};
+ActionSoExpandWidget.prototype = new Widget();
+ActionSoExpandWidget.prototype.render = function(parent, nextSibling) {
+	this.computeAttributes();
+	this.execute();
+};
+ActionSoExpandWidget.prototype.execute = function() {
+	this.makeChildWidgets();
+};
+ActionSoExpandWidget.prototype.invokeAction = function(triggeringWidget, event) {
+	soOutlineAction(this, true);
+	return true;
+};
+exports["action-so-expand"] = ActionSoExpandWidget;
+
+var ActionSoCollapseWidget = function(parseTreeNode, options) {
+	this.initialise(parseTreeNode, options);
+};
+ActionSoCollapseWidget.prototype = new Widget();
+ActionSoCollapseWidget.prototype.render = function(parent, nextSibling) {
+	this.computeAttributes();
+	this.execute();
+};
+ActionSoCollapseWidget.prototype.execute = function() {
+	this.makeChildWidgets();
+};
+ActionSoCollapseWidget.prototype.invokeAction = function(triggeringWidget, event) {
+	soOutlineAction(this, false);
+	return true;
+};
+exports["action-so-collapse"] = ActionSoCollapseWidget;
 
 })();

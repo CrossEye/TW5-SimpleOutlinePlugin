@@ -1,6 +1,10 @@
 title: $:/plugins/crosseye/simple-outline/macros
 tags: $:/tags/Macro
 
+\procedure so-expand(state)
+<$action-so-expand state=<<state>>/>
+\end
+
 \procedure so-collapse(state)
-<$action-deletetiddler $filter="[prefix<state>]"/>
+<$action-so-collapse state=<<state>>/>
 \end

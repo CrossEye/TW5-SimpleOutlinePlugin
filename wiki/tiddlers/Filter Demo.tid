@@ -1,0 +1,20 @@
+title: Filter Demo
+type: text/vnd.tiddlywiki
+
+!! Filter-Based Outline Demo
+
+This demo uses `++` filter lines to populate outline sections from the live tiddler store.  The first section is fully dynamic — every tiddler tagged `HistoryOfComputing` appears automatically.  The second mixes a filter with hand-picked static items.
+
+<$simple-outline text="""
+!! All History Notes (filter-generated)
+  ++ [tag[HistoryOfComputing]sort[title]]
+
+!! Hand-Picked Highlights (static)
+  + note-turing-machines
+  + note-von-neumann-architecture
+  + note-unix-origins
+""" class="outline" open-depth="1" label-fields="summary caption"/>
+
+---
+
+Try it: create a new tiddler, add `tags: HistoryOfComputing` to it, and watch it appear in the first section automatically.

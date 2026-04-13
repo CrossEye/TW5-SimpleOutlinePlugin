@@ -1,0 +1,25 @@
+title: $:/_/so/version/0.7.0
+tags: so-version
+version: 0.7.0
+sort-key: 000007000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.7.0/
+
+!!! [[0.7.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.7.0/]]
+
+!!!! Commit [[38cbea5|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/38cbea502741cd181455c1d05644a44bcb30ee3f]] (2026-04-12)
+
+```
+node-type CSS classes, .so-missing, open-depth, label-fields
+
+* Add semantic classes so-header, so-group, so-tiddler, so-leaf, so-text
+  to every rendered element for CSS targeting by node kind
+* Add .so-missing to leaf items whose referenced tiddler does not exist
+* Add open-depth attribute — pre-opens nodes at levels 0..N-1 on first
+  render; saved user state always takes precedence
+* Add label-fields attribute — space-separated field chain replacing the
+  hardcoded summary → caption fallback; default preserves prior behaviour
+* Update usage.tid: new attributes table rows, expanded CSS hooks table,
+  new sections for open-depth and label-fields
+```
+
+----------

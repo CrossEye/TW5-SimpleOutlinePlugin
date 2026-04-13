@@ -1,0 +1,15 @@
+title: $:/_/so/version/0.9.0
+tags: so-version
+version: 0.9.0
+sort-key: 000009000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.9.0/
+
+!!! [[0.9.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.9.0/]]
+
+!!!! Commit [[82ba436|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/82ba4369003126392ffdce23b13caab8137f4a55]] (2026-04-13)
+
+```
+state attribute, so-collapse macro, keyboard navigation
+```
+
+----------

@@ -1,0 +1,9 @@
+caption: Changelog
+created: 20260413031415478
+modified: 20260413031456312
+title: $:/plugins/crosseye/simple-outline/changelog
+type: text/vnd.tiddlywiki
+
+<$list filter="[all[shadows]tag[so-version]sort[sort-key]reverse[]]">
+<$transclude $tiddler=<<currentTiddler>> $mode="block" />
+</$list>

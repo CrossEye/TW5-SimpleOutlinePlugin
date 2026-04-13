@@ -29,24 +29,26 @@ The `text` attribute can also be supplied via transclusion (`text={{MyOutlineTid
 
 ### Attributes
 
-| Attribute          | Default   | Description                                                                                                                                                                |
-| ------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `text`             | —         | Outline definition (required)                                                                                                                                              |
-| `class`            | `outline` | CSS class(es) applied to the container `<div>`                                                                                                                             |
-| `summary-template` | —         | Tiddler rendered inside each `<summary>` element for tiddler items. Receives `currentTiddler` (the item's tiddler title) and `so-label` (the computed label) as variables. |
-| `detail-template`  | —         | Tiddler rendered as the expanded body for each tiddler item, instead of transcluding the tiddler's own body. Receives the same `currentTiddler` and `so-label` variables.  |
+| Attribute            | Default          | Description                                                                                                                                                              |
+| -------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `text`               | —                | Outline definition (required)                                                                                                                                            |
+| `class`              | `outline`        | CSS class(es) applied to the container `<div>`                                                                                                                           |
+| `summary-template`   | —                | Tiddler rendered inside each `<summary>` for tiddler items. Receives `currentTiddler` and `so-label`.                                                                    |
+| `group-template`     | —                | Tiddler rendered inside each `<summary>` for plain group nodes. Receives `so-label` only (group nodes have no associated tiddler).                                       |
+| `header-template`    | —                | Tiddler rendered inside `!!` section header divs, replacing the default `<h2>`. Receives `so-label` only.                                                                |
+| `detail-template`    | —                | Tiddler rendered as the expanded body for each tiddler item instead of transcluding the tiddler's own body. Receives `currentTiddler` and `so-label`.                    |
+| `tiddler-link`       | —                | When non-empty, adds a small link after each tiddler item's label. Clicking it opens the tiddler without toggling the outline node.                                      |
+| `tiddler-link-label` | `✳`              | Glyph or text for the `tiddler-link`. Only used when `tiddler-link` is set.                                                                                              |
+| `open-depth`         | `0`              | Number of levels to open by default on first render. Explicit user toggles always take precedence.                                                                       |
+| `label-fields`       | `summary caption` | Space-separated list of tiddler field names tried in order to compute the display label. The outline text is the final fallback.                                         |
 
-### Label fallback chain
+### Label resolution
 
-For `+` tiddler items the display label is resolved in this order:
-
-1. `summary` field of the tiddler
-2. `caption` field of the tiddler
-3. The display text from the outline (or the tiddler title if no `::` override)
+For `+` tiddler items the display label is the first non-empty value found by walking the `label-fields` chain (default: `summary` → `caption`), falling back to the display text written in the outline.
 
 ### Session state
 
-Open/closed state is persisted for the duration of the browser session. Navigating away and back restores the outline to the same positions.
+Open/closed state is persisted for the duration of the browser session using per-instance state tiddlers. Navigating away and back restores the outline to the same positions. Use `open-depth` to control the initial state on first visit.
 
 ## Installation
 

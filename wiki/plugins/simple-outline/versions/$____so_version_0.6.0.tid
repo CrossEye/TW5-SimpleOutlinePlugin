@@ -1,0 +1,15 @@
+title: $:/_/so/version/0.6.0
+tags: so-version
+version: 0.6.0
+sort-key: 000006000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.6.0/
+
+!!! [[0.6.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.6.0/]]
+
+!!!! Commit [[4520e19|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/4520e19f6e669f159695fadd3a0b050f4d5f280f]] (2026-04-12)
+
+```
+Fix location of version files in the release workflow
+```
+
+----------

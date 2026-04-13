@@ -38,7 +38,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "docs: build for ${{ github.sha }}"
-          file_pattern: "docs/ wiki/tiddlers/$____so_version_*.tid"
+          file_pattern: "docs/ wiki/plugins/simple-outline/versions/$____so_version_*.tid"
           commit_user_name: github-actions[bot]
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
 

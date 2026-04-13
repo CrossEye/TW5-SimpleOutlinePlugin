@@ -38,6 +38,27 @@ detail-template:
   The same two variables are set: currentTiddler and so-label.
   When absent, the tiddler's own body is transcluded directly.
 
+group-template:
+  Title of a tiddler to render inside each <summary> element for plain group
+  nodes (collapsible labels that are not tiddler items).  One variable is set:
+    so-label — the group label text
+  currentTiddler is not set — group nodes have no associated tiddler.
+  When absent, so-label is rendered as plain text.
+
+header-template:
+  Title of a tiddler to render inside !! section header divs, replacing the
+  default <h2>.  One variable is set:
+    so-label — the header text
+  When absent, an <h2> is used.
+
+tiddler-link:
+  When non-empty, adds a small link on the summary row for every tiddler item
+  (expandable and leaf alike).  The link navigates to the tiddler without
+  toggling the outline node.  It is appended inline inside .so-label so it flows right after the text,
+  including when the label wraps to multiple lines.  A stopPropagation handler
+  prevents the click from reaching the native toggle.
+  tiddler-link-label: glyph or text for the link (default ✳ U+2731).
+
 open-depth:
   Integer.  Nodes at levels 0 through open-depth-1 are open by default on
   first render (i.e. when no saved state tiddler exists yet).  Explicit user
@@ -141,7 +162,13 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	// summaryTargets: [{label, tiddlerTitle, domNode}]
 	// Filled during the tree walk when summary-template is in use.
 	this.summaryTargets = [];
-	// iconTargets: [{closedDomNode, openDomNode}]
+	// groupTargets: [{label, domNode}]
+	// Filled during the tree walk when group-template is in use.
+	this.groupTargets = [];
+	// headerTargets: [{label, domNode}]
+	// Filled during the tree walk when header-template is in use.
+	this.headerTargets = [];
+	// iconTargets: [{arrowDomNode}]
 	// One entry per collapsible node; child widgets render the TW arrow icons.
 	this.iconTargets = [];
 	// contentTargets: [{tiddlerTitle, label, domNode}]
@@ -152,10 +179,20 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	if(this.summaryTemplate) {
 		this.referencedTiddlers.push(this.summaryTemplate);
 	}
+	this.groupTemplate = this.getAttribute("group-template", "");
+	if(this.groupTemplate) {
+		this.referencedTiddlers.push(this.groupTemplate);
+	}
+	this.headerTemplate = this.getAttribute("header-template", "");
+	if(this.headerTemplate) {
+		this.referencedTiddlers.push(this.headerTemplate);
+	}
 	this.detailTemplate = this.getAttribute("detail-template", "");
 	if(this.detailTemplate) {
 		this.referencedTiddlers.push(this.detailTemplate);
 	}
+	this.tiddlerLink = this.getAttribute("tiddler-link", "");
+	this.tiddlerLinkLabel = this.getAttribute("tiddler-link-label", "\u2731");
 	this.openDepth = parseInt(this.getAttribute("open-depth", "0"), 10) || 0;
 	var labelFieldsAttr = this.getAttribute("label-fields", "summary caption");
 	this.labelFields = labelFieldsAttr.trim().split(/\s+/).filter(Boolean);
@@ -201,6 +238,32 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 				},
 				children: [transcludeNode({type: "string", value: self.summaryTemplate}, false)]
 			}]
+		});
+		allDomNodes.push(t.domNode);
+	});
+
+	// group-template: no currentTiddler (group nodes have no associated tiddler).
+	this.groupTargets.forEach(function(t) {
+		allNodes.push({
+			type: "set",
+			attributes: {
+				name:  {type: "string", value: "so-label"},
+				value: {type: "string", value: t.label}
+			},
+			children: [transcludeNode({type: "string", value: self.groupTemplate}, false)]
+		});
+		allDomNodes.push(t.domNode);
+	});
+
+	// header-template: no currentTiddler (header nodes have no associated tiddler).
+	this.headerTargets.forEach(function(t) {
+		allNodes.push({
+			type: "set",
+			attributes: {
+				name:  {type: "string", value: "so-label"},
+				value: {type: "string", value: t.label}
+			},
+			children: [transcludeNode({type: "string", value: self.headerTemplate}, false)]
 		});
 		allDomNodes.push(t.domNode);
 	});
@@ -316,9 +379,15 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			// !! Section header with children
 			el = doc.createElement("div");
 			el.className = cls + " so-header";
-			h2 = doc.createElement("h2");
-			h2.textContent = node.value;
-			el.appendChild(h2);
+			if(self.headerTemplate) {
+				var headerTarget = doc.createElement("div");
+				el.appendChild(headerTarget);
+				self.headerTargets.push({label: node.value, domNode: headerTarget});
+			} else {
+				h2 = doc.createElement("h2");
+				h2.textContent = node.value;
+				el.appendChild(h2);
+			}
 			self.renderTree(node.children, el, level + 1, nodePath);
 		} else {
 			// Plain group node — collapsible
@@ -327,7 +396,10 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			self.wireState(el, stateTitle, level < self.openDepth);
 			summary = doc.createElement("summary");
 			self.addArrows(summary);
-			if(self.summaryTemplate) {
+			if(self.groupTemplate) {
+				// group-template renders into summary; register for child widget.
+				self.groupTargets.push({label: node.value, domNode: summary});
+			} else if(self.summaryTemplate) {
 				// Mirror the so-label/so-toggle structure the template produces,
 				// so the same CSS rules apply to group nodes.
 				labelSpan = doc.createElement("span");
@@ -375,6 +447,21 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 				labelSpan = doc.createElement("span");
 				labelSpan.className = "so-label";
 				labelSpan.textContent = label;
+				if(self.tiddlerLink) {
+					// Link is inline inside .so-label so it flows right after the text,
+					// even when the label wraps to multiple lines.
+					// stopPropagation prevents the click from triggering the native toggle.
+					var linkEl = doc.createElement("a");
+					linkEl.href = "#";
+					linkEl.className = "so-tiddler-link";
+					linkEl.textContent = self.tiddlerLinkLabel;
+					linkEl.addEventListener("click", function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+					});
+					labelSpan.appendChild(linkEl);
+				}
 				summary.appendChild(labelSpan);
 			}
 			el.appendChild(summary);
@@ -387,6 +474,18 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			el.className = cls + " so-leaf item" + (tid ? "" : " so-missing");
 			p = doc.createElement("p");
 			p.textContent = label;
+			if(self.tiddlerLink && tid) {
+				var leafLink = doc.createElement("a");
+				leafLink.href = "#";
+				leafLink.className = "so-tiddler-link";
+				leafLink.textContent = self.tiddlerLinkLabel;
+				leafLink.addEventListener("click", function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+				});
+				p.appendChild(leafLink);
+			}
 			el.appendChild(p);
 		}
 		parent.appendChild(el);

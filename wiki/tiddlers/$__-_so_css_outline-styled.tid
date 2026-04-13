@@ -1,0 +1,38 @@
+title: $:/_/so/css/outline-styled
+type: text/css
+tags: $:/tags/Stylesheet
+
+/*-- outline-styled: custom header-template and group-template styles --------*/
+/* Usage: class="outline outline-styled"                                       */
+/*   header-template="$:/_/so/templates/styled-header"                        */
+/*   group-template="$:/_/so/templates/styled-group"                          */
+
+/* header-template output: replace default h2 with a ruled heading */
+.outline-styled .so-header {
+	margin-top: 1.2em;
+}
+
+.outline-styled .so-header .so-header-text {
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #1a3a5c;
+	border-bottom: 2px solid #7aaad8;
+	padding-bottom: 3px;
+	margin-bottom: 2px;
+	letter-spacing: 0.02em;
+}
+
+/* group-template output: bold italic label + optional description hint */
+.outline-styled .so-group > summary .so-label {
+	font-style: italic;
+	font-weight: bold;
+	color: #2a4a7f;
+}
+
+.outline-styled .so-group-desc {
+	font-style: normal;
+	font-size: 0.85em;
+	color: #778;
+	margin-left: 0.3em;
+}

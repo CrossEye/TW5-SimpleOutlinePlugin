@@ -40,15 +40,20 @@ The `text` attribute holds the outline description.  You can also supply it via 
 
 !!! Label resolution
 
-For tiddler references, the displayed label is taken from the first of these fields that exists: `summary` → `caption` → the name as written.
+For tiddler references, the displayed label is taken from the first non-empty value in the `label-fields` chain (default: `summary` → `caption`), falling back to the name as written.
 
 !!! Attributes
 
 |!Attribute |!Default |!Purpose |
 |`text` |— |The outline description (required) |
 |`class` |`outline` |CSS class(es) on the container `<div>` |
-|`summary-template` |— |Tiddler to render inside each `<summary>` element; receives `currentTiddler` and `so-label` variables |
-|`detail-template` |— |Tiddler to render as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` variables |
+|`summary-template` |— |Tiddler to render inside each `<summary>` for tiddler items; receives `currentTiddler` and `so-label` |
+|`group-template` |— |Tiddler to render inside each `<summary>` for group nodes; receives `so-label` only |
+|`header-template` |— |Tiddler to render inside `!!` section headers, replacing the default `<h2>`; receives `so-label` only |
+|`detail-template` |— |Tiddler to render as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` |
+|`tiddler-link` |— |When non-empty, adds a link on each tiddler item's row that opens the tiddler without toggling the node |
+|`open-depth` |`0` |Levels to open by default on first render |
+|`label-fields` |`summary caption` |Space-separated field names tried in order for the display label |
 
 !! The Demos
 
@@ -63,6 +68,14 @@ Shows the `summary-template` attribute in action.  The template renders a custom
 !!! [[Detail Template Test Demo]]
 
 Shows the `detail-template` attribute in action.  Instead of transcluding a tiddler's body text directly, the plugin renders the named template tiddler with `currentTiddler` and `so-label` set.  The template here adds a linked title above the body so the reader can navigate to the source tiddler directly.
+
+!!! [[Tiddler Link Demo]]
+
+Shows the `tiddler-link` attribute: each tiddler item gets a small ✳ link on the right of its summary row.  Clicking it opens the tiddler in the story river without toggling the outline node, so you can read entries without losing your place.  Also uses `open-depth="1"` (added in 0.7.0) to pre-open the top level on first visit.
+
+!!! [[Styled Outline Demo]]
+
+Shows `group-template` and `header-template` together, giving the structural nodes a custom visual style.  The header template replaces the default `<h2>` with a ruled heading.  The group template renders labels in bold italic — and, because templates have full TW widget access, conditionally appends a short description from the group's own tiddler when one exists.
 
 !!! [[WikiText Reference Outline Demo]]
 

@@ -1,0 +1,49 @@
+caption: Styled Outline
+created: 20260413024813647
+modified: 20260413024813647
+tags: TableOfContents [[Simple Outline Demo]]
+title: Styled Outline Demo
+type: text/vnd.tiddlywiki
+
+Demonstrates `group-template` and `header-template`, which give you full TW widget power inside structural nodes.
+
+The `header-template` here replaces the default `<h2>` with a ruled heading rendered from a template tiddler.
+
+The `group-template` renders each group label in bold italic, and — because the template has full TW widget access — adds a short description pulled from the group's own tiddler when one exists.  Three of the groups below (`Mathematical Precursors`, `Computability Theory`, `Bell Labs Breakaway`) have a `description` field; the rest fall back to label-only.
+
+<$simple-outline class="outline outline-styled"
+  header-template="$:/_/so/templates/styled-header"
+  group-template="$:/_/so/templates/styled-group"
+  open-depth="1"
+  text="""
+!! Theoretical Foundations
+
+  Mathematical Precursors
+    + note-boole-algebra
+    + note-babbage-engine
+
+  Computability Theory
+    + note-turing-machines
+    + note-church-lambda
+    + note-goedel-incompleteness
+    + note-halting-problem
+
+!! The First Machines (1940s)
+
+  + note-colossus
+  + note-eniac
+
+  Stored-Program Concept
+    + note-von-neumann-architecture
+    + note-manchester-baby
+
+!! Operating Systems
+
+  Academic Origins
+    + note-multics
+
+  Bell Labs Breakaway
+    + note-unix-origins
+    + note-c-language
+    + note-thompson-ritchie
+"""/>

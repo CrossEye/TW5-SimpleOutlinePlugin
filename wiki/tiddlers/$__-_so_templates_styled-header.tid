@@ -1,0 +1,3 @@
+title: $:/_/so/templates/styled-header
+
+<span class="so-header-text"><<so-label>></span>

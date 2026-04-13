@@ -23,7 +23,7 @@ tags: $:/tags/Stylesheet
 
 .outline details > summary {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	list-style: none;        /* suppress native marker */
 	cursor: pointer;
 	padding-top: 1px;
@@ -54,6 +54,7 @@ tags: $:/tags/Stylesheet
 	flex-shrink: 0;
 	width: 0.85em;
 	height: 0.85em;
+	margin-top: 0.2em;
 	margin-right: 4px;
 	transition: transform 0.15s ease;
 }
@@ -121,6 +122,19 @@ tags: $:/tags/Stylesheet
 
 /*-- so-version-links: inline download link list on Version History page -----*/
 .so-version-links a { margin-right: 0.6em; }
+
+/*-- tiddler-link: open-tiddler link inside <summary>, pushed to far right ---*/
+
+.outline details > summary .so-tiddler-link {
+	margin-left: 0.3em;
+	color: #bbb;
+	font-size: 0.75em;
+	text-decoration: none;
+}
+
+.outline details > summary .so-tiddler-link:hover {
+	color: #33c;
+}
 
 /*-- so-detail-title: linked tiddler title inside detail-template content ----*/
 .outline .so-detail-title {

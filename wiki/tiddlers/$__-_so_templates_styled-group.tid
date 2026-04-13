@@ -1,0 +1,3 @@
+title: $:/_/so/templates/styled-group
+
+<span class="so-label"><<so-label>></span><$list filter="[<so-label>has[description]]" variable="_"><span class="so-group-desc"> — <$view tiddler=<<so-label>> field="description"/></span></$list><span class="so-toggle"></span>

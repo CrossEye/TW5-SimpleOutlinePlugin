@@ -1,0 +1,39 @@
+title: Tiddler Link Demo
+caption: Tiddler Link
+tags: TableOfContents [[Simple Outline Demo]]
+type: text/vnd.tiddlywiki
+
+Demonstrates the `tiddler-link` attribute.  Each tiddler item gets a small ✳ link on the right side of its row.  Clicking the ✳ opens the tiddler in the story river without toggling the outline node — so you can read entries without losing your place in the outline.
+
+Also uses `open-depth="1"` (added in 0.7.0) to pre-open the top level on the first visit.
+
+<$simple-outline class="outline" tiddler-link="yes" open-depth="1" text="""
+!! Theoretical Foundations
+
+  Mathematical Precursors
+    + note-boole-algebra
+    + note-babbage-engine
+
+  Computability Theory
+    + note-turing-machines
+    + note-church-lambda
+    + note-goedel-incompleteness
+    + note-halting-problem
+
+!! The First Machines (1940s)
+
+  + note-colossus
+  + note-eniac
+  + note-von-neumann-architecture
+  + note-manchester-baby
+
+!! Operating Systems
+
+  Academic Origins
+    + note-multics
+
+  Bell Labs Breakaway
+    + note-unix-origins
+    + note-c-language
+    + note-thompson-ritchie
+"""/>

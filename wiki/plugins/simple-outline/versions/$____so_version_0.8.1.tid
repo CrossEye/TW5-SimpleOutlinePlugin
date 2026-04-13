@@ -1,0 +1,15 @@
+title: $:/_/so/version/0.8.1
+tags: so-version
+version: 0.8.1
+sort-key: 000008001
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.8.1/
+
+!!! [[0.8.1|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.8.1/]]
+
+!!!! Commit [[4719657|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/471965702d7fafab8a5179302680c11e1fb5a995]] (2026-04-13)
+
+```
+Update README with recent changes
+```
+
+----------

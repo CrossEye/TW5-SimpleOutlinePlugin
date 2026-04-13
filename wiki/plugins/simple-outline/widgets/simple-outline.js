@@ -30,13 +30,24 @@ summary-template:
   Title of a tiddler to render inside each <summary> element for tiddler items.
   Two variables are set when the template is rendered:
     currentTiddler — the item tiddler title
-    so-label       — the pre-computed label (summary → caption → display fallback)
+    so-label       — the pre-computed label (label-fields chain, then display fallback)
   When absent, so-label is used as plain text.
 
 detail-template:
   Title of a tiddler to render as the expanded body for tiddler items.
   The same two variables are set: currentTiddler and so-label.
   When absent, the tiddler's own body is transcluded directly.
+
+open-depth:
+  Integer.  Nodes at levels 0 through open-depth-1 are open by default on
+  first render (i.e. when no saved state tiddler exists yet).  Explicit user
+  toggles always take precedence over the default.  Default: 0 (all closed).
+
+label-fields:
+  Space-separated list of tiddler field names tried in order to produce the
+  display label for each tiddler item.  The first non-empty value wins; the
+  outline's display text is the final fallback.
+  Default: "summary caption" (preserves prior behaviour).
 
 Disclosure arrows:
   Each collapsible <summary> receives two child spans:
@@ -145,6 +156,9 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	if(this.detailTemplate) {
 		this.referencedTiddlers.push(this.detailTemplate);
 	}
+	this.openDepth = parseInt(this.getAttribute("open-depth", "0"), 10) || 0;
+	var labelFieldsAttr = this.getAttribute("label-fields", "summary caption");
+	this.labelFields = labelFieldsAttr.trim().split(/\s+/).filter(Boolean);
 
 	// Base path for state tiddlers.  <<qualification>> is a per-rendering-context
 	// hash that the core TOC macros also use, ensuring instances in different
@@ -272,9 +286,10 @@ SimpleOutlineWidget.prototype.addArrows = function(summary) {
 // On render: restore open attribute from the state tiddler if present.
 // On toggle: write/delete the state tiddler (does NOT trigger full re-render
 // because state tiddlers are not in referencedTiddlers).
-SimpleOutlineWidget.prototype.wireState = function(el, stateTitle) {
+SimpleOutlineWidget.prototype.wireState = function(el, stateTitle, defaultOpen) {
 	var wiki = this.wiki;
-	if(wiki.getTiddlerText(stateTitle, "") === "open") {
+	var existing = wiki.getTiddlerText(stateTitle, "");
+	if(existing === "open" || (defaultOpen && existing === "")) {
 		el.setAttribute("open", "");
 	}
 	el.addEventListener("toggle", function() {
@@ -300,7 +315,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		if(node.header) {
 			// !! Section header with children
 			el = doc.createElement("div");
-			el.className = cls;
+			el.className = cls + " so-header";
 			h2 = doc.createElement("h2");
 			h2.textContent = node.value;
 			el.appendChild(h2);
@@ -308,8 +323,8 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		} else {
 			// Plain group node — collapsible
 			el = doc.createElement("details");
-			el.className = cls;
-			self.wireState(el, stateTitle);
+			el.className = cls + " so-group";
+			self.wireState(el, stateTitle, level < self.openDepth);
 			summary = doc.createElement("summary");
 			self.addArrows(summary);
 			if(self.summaryTemplate) {
@@ -338,15 +353,19 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		var tid = self.wiki.getTiddler(node.tiddler);
 		self.referencedTiddlers.push(node.tiddler);
 
-		var label = tid
-			? (tid.fields.summary || tid.fields.caption || node.display)
-			: node.display;
+		var label = node.display;
+		if(tid) {
+			for(var i = 0; i < self.labelFields.length; i++) {
+				var v = tid.fields[self.labelFields[i]];
+				if(v) { label = v; break; }
+			}
+		}
 		var hasContent = tid && tid.fields.text && tid.fields.text.trim();
 
 		if(hasContent) {
 			el = doc.createElement("details");
-			el.className = cls;
-			self.wireState(el, stateTitle);
+			el.className = cls + " so-tiddler";
+			self.wireState(el, stateTitle, level < self.openDepth);
 			summary = doc.createElement("summary");
 			self.addArrows(summary);
 			if(self.summaryTemplate) {
@@ -365,7 +384,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			self.contentTargets.push({tiddlerTitle: node.tiddler, label: label, domNode: contentDiv});
 		} else {
 			el = doc.createElement("div");
-			el.className = cls + " item";
+			el.className = cls + " so-leaf item" + (tid ? "" : " so-missing");
 			p = doc.createElement("p");
 			p.textContent = label;
 			el.appendChild(p);
@@ -375,7 +394,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 	} else {
 		// Plain label (leaf, no + prefix)
 		el = doc.createElement("div");
-		el.className = cls;
+		el.className = cls + " so-text";
 		el.textContent = node.value;
 		parent.appendChild(el);
 	}

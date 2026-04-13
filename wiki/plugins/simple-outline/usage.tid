@@ -32,7 +32,7 @@ Each line of the `text` attribute describes one node:
 |Plain text |Structural group — collapsible if it has children |
 |Indentation |Each extra indent level (leading spaces) is one nesting level deeper |
 
-For tiddler references, the displayed label comes from the first of these fields that exists on the tiddler: `summary` → `caption` → the name as written.
+For tiddler references, the displayed label comes from the first non-empty value in the `label-fields` chain (default: `summary` → `caption`), falling back to the name as written in the outline.
 
 !! Attributes
 
@@ -41,23 +41,30 @@ For tiddler references, the displayed label comes from the first of these fields
 |`class` |`outline` |CSS class(es) added to the container `<div>` |
 |`summary-template` |— |Tiddler rendered inside each `<summary>` element; receives `currentTiddler` and `so-label` |
 |`detail-template` |— |Tiddler rendered as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` |
+|`open-depth` |`0` |Levels to open by default on first render (0 = all closed) |
+|`label-fields` |`summary caption` |Space-separated field names tried in order to compute the display label |
 
 !! CSS Hooks
 
 The plugin generates a predictable DOM structure that you can target with CSS.
 
-|!Selector |!Element |
+|!Selector |!Meaning |
 |`.outline` (or your `class`) |The container `<div>` |
-|`.level-0` … `.level-10` |Applied to every element; controls indentation |
-|`.outline details` |Any collapsible node (group or tiddler item with content) |
+|`.level-0` … `.level-N` |Applied to every element; controls indentation |
+|`.so-header` |`<div>` wrapping a `!!` section header |
+|`.so-group` |`<details>` for a plain collapsible group node |
+|`.so-tiddler` |`<details>` for a tiddler item that has body content |
+|`.so-leaf` |`<div>` for a tiddler item with no body content |
+|`.so-text` |`<div>` for a plain label line (no `+` prefix) |
+|`.so-missing` |Added to `.so-leaf` when the referenced tiddler does not exist |
 |`.outline details[open]` |A currently-expanded node |
 |`.outline details > summary` |The clickable row header |
 |`.so-arrow` |`<span>` inside `<summary>` holding the rotating arrow icon |
 |`.so-label` |`<span>` wrapping the display text inside `<summary>` |
 |`.so-toggle` |`<span>` after `.so-label` when `summary-template` is active — empty; useful for custom expand/collapse indicators |
 |`.ltgraybox` |`<div>` wrapping expanded tiddler content |
-|`div.item` |Non-expandable tiddler reference (tiddler has no body) |
-|`.outline h2` |Section header |
+|`.item` |Non-expandable tiddler reference (same element as `.so-leaf`; kept for compatibility) |
+|`.outline h2` |Section header text |
 
 To replace the default arrow with your own indicator:
 
@@ -115,3 +122,23 @@ Usage:
 <$simple-outline text={{MyOutline}} class="outline"
   detail-template="My Detail Template"/>
 ```
+
+!! open-depth
+
+Pre-opens nodes by level on first render.  Nodes at levels 0 through `open-depth - 1` start open; deeper nodes start closed.  Once a user has toggled a node, their choice is saved and takes precedence.
+
+```
+<$simple-outline text={{MyOutline}} open-depth="2"/>
+```
+
+With `open-depth="2"`, level-0 and level-1 nodes open automatically on the first visit.  Levels 2 and deeper stay closed until the user expands them.
+
+!! label-fields
+
+Controls which tiddler fields are consulted (in order) when computing the display label for a `+` item.  The first non-empty value wins; the text written in the outline is the final fallback.
+
+```
+<$simple-outline text={{MyOutline}} label-fields="name caption"/>
+```
+
+The default is `"summary caption"`, which preserves the behaviour from earlier versions.  Supply a single field name to pin to one field, or a longer list to extend the fallback chain.

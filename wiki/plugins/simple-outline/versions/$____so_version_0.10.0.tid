@@ -1,0 +1,30 @@
+title: $:/_/so/version/0.10.0
+tags: so-version
+version: 0.10.0
+sort-key: 000010000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.10.0/
+
+!!! [[0.10.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.10.0/]]
+
+!!!! Commit [[cb0f8b9|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/cb0f8b979f554132865a7304488be39d54954122]] (2026-04-13)
+
+```
+v0.9.1 + v0.10.0: expand-all, filter items, new demos
+
+0.9.1 — so-expand / so-collapse action widgets
+  Replace the tiddler-delete-only so-collapse macro with proper DOM-walking
+  action widgets (<$action-so-expand>, <$action-so-collapse>) that immediately
+  open/close <details> elements and write/delete state tiddlers in one pass.
+  Container div now carries data-so-outline-state for targeting.
+  Add so-expand procedure. Add Expand Collapse Demo.
+
+0.10.0 — ++ filter-based items (Phase A)
+  A line beginning with ++ is evaluated as a TW filter at render time; each
+  matching tiddler becomes a regular tiddler item. All existing attributes
+  (label-fields, summary-template, tiddler-link, open-depth, etc.) apply to
+  filter results. Outlines with filter nodes trigger a broader refresh so
+  results stay current as tiddlers are added or changed.
+  Add Filter Demo.
+```
+
+----------

@@ -6,6 +6,17 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.1/
 
 !!! [[0.12.1|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.1/]]
 
+!!!! Commit [[1f9cf06|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/1f9cf0632ec2123003f66b32d93230e194ebc8f1]] (2026-04-14)
+
+```
+fix dataset access during static HTML export
+
+Guard container.dataset.soOutlineState and el.dataset.soState writes
+behind if(...dataset) checks. TiddlyWiki's fake DOM used during static
+export does not provide dataset, causing an uncaught TypeError at render
+time. No behavioural change in a live browser.
+```
+
 !!!! Commit (2026-04-14)
 
 ```

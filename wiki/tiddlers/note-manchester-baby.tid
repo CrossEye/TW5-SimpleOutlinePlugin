@@ -1,5 +1,7 @@
 title: note-manchester-baby
 summary: The Manchester Small-Scale Experimental Machine (1948) — the first computer to run a stored program from electronic memory
 tags: HistoryOfComputing
+year: 1948
+period: First Machines
 
 Built by Williams and Kilburn at the University of Manchester, the Baby ran its first program on 21 June 1948 — widely regarded as the birth of the modern computer. It used Williams tubes (cathode-ray tubes) as RAM, a genuinely novel storage technology. Its first real program found the highest factor of 2^18 by trial division, running for 52 minutes and searching through 3.5 million operations.

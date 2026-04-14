@@ -1,0 +1,17 @@
+title: $:/_/so/version/0.9.1
+tags: so-version
+version: 0.9.1
+sort-key: 000009001
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.9.1/
+
+!!! [[0.9.1|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.9.1/]]
+
+!!!! Commit [[cb0f8b9|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/cb0f8b979f554132865a7304488be39d54954122]] (2026-04-13)
+
+```
+so-expand / so-collapse action widgets
+```
+
+Replace the tiddler-delete-only `so-collapse` macro with proper DOM-walking action widgets (`<$action-so-expand>`, `<$action-so-collapse>`) that open/close `<details>` elements and write/delete state tiddlers in one pass.  The container `<div>` now carries `data-so-outline-state` so external buttons can target a named outline.  Add `<<so-expand>>` and `<<so-collapse>>` procedures.  Add Expand Collapse Demo.
+
+----------

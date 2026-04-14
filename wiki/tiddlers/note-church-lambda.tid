@@ -1,5 +1,7 @@
 title: note-church-lambda
 summary: Church's lambda calculus — computation expressed as function application and substitution (1936)
 tags: HistoryOfComputing
+year: 1936
+period: Computability Theory
 
 Developed independently of Turing at almost the same time. The Church-Turing thesis holds that both models define exactly the same class of computable functions. Lambda calculus has no concept of state or memory — only functions and their application — making it the theoretical ancestor of functional programming languages (Lisp, ML, Haskell).

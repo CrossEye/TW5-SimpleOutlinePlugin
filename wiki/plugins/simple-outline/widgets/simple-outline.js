@@ -23,6 +23,9 @@ Input format:
   !! prefix    → section header (h2)
   + prefix     → tiddler reference (reads summary/caption + text fields)
   ++ prefix    → filter expression — expands to tiddler items at render time
+                 Options (after the last ] of the filter):
+                   group-by:field        group results by a tiddler field value
+                   group-by:<<proc>>     group results by calling a named procedure
   plain text   → structural group node (collapsible if it has children)
   indentation  → nesting (children are indented under their parent)
   :: separator → display text :: tiddler title (overrides display label)
@@ -148,15 +151,26 @@ function extract(node) {
 	var tidLink    = !filterLink && v.startsWith("+");
 	var content    = v.slice(filterLink ? 2 : tidLink ? 1 : header ? 2 : 0).trim();
 	if(filterLink) {
+		// Split filter expression from trailing options.
+		// Filter expressions always end with ]; options follow after that.
+		var lastBracket = content.lastIndexOf("]");
+		var filterExpr  = lastBracket !== -1 ? content.slice(0, lastBracket + 1).trim() : content;
+		var optStr      = lastBracket !== -1 ? content.slice(lastBracket + 1).trim() : "";
+		var groupBy     = "";
+		if(optStr) {
+			var gm = optStr.match(/(?:^|\s)group-by:(<<[^>]+>>|\S+)/);
+			if(gm) groupBy = gm[1];
+		}
 		return {
 			value:      content,
 			header:     false,
 			tidLink:    false,
 			isFilter:   true,
-			filterExpr: content,
+			filterExpr: filterExpr,
+			groupBy:    groupBy,
 			display:    "",
 			tiddler:    "",
-			children:   [] // Phase A: filter nodes have no sub-children
+			children:   []
 		};
 	}
 	var parts = content.split("::").map(function(s) { return s.trim(); });
@@ -671,24 +685,68 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		parent.appendChild(el);
 
 	} else if(node.isFilter) {
-		// ++ filter expression — evaluate and render each result as a tiddler item.
+		// ++ filter expression — evaluate and render each result as a tiddler item,
+		// optionally grouped by a field value (Phase B) or procedure (Phase C).
 		self.hasFilterNodes = true;
 		var filterResults = self.wiki.filterTiddlers(node.filterExpr, self);
 		// Use the filter expression as a path segment so state tiddlers don't
 		// collide with manually specified + items at the same level.
 		var filterPath = path + "/++:" + node.filterExpr;
-		filterResults.forEach(function(title) {
-			self.renderNode({
-				value:      title,
-				header:     false,
-				tidLink:    true,
-				isFilter:   false,
-				filterExpr: "",
-				display:    title,
-				tiddler:    title,
-				children:   []
-			}, parent, level, filterPath);
-		});
+
+		if(node.groupBy) {
+			// Phase B/C — collect results into keyed groups, then render each
+			// group as a collapsible group node with tiddler-item children.
+			var isProcedure = /^<<[^>]+>>$/.test(node.groupBy);
+			var procName    = isProcedure ? node.groupBy.slice(2, -2).trim() : "";
+			var groups      = Object.create(null); // key → [title, ...]
+			var groupOrder  = [];
+			filterResults.forEach(function(title) {
+				var key;
+				if(isProcedure) {
+					// Phase C: invoke named procedure with currentTiddler set.
+					// parentWidget: self lets the call walk up the real widget
+					// tree, so procedures defined in the hosting tiddler (or
+					// globally via $:/tags/Macro) are resolvable.
+					key = self.wiki.renderText("text/plain", "text/vnd.tiddlywiki",
+						"<<" + procName + ">>",
+						{parentWidget: self, variables: {currentTiddler: title}}).trim();
+				} else {
+					// Phase B: read a tiddler field directly.
+					var tid = self.wiki.getTiddler(title);
+					var val = tid && tid.fields[node.groupBy];
+					key     = val ? String(val) : "";
+				}
+				if(!key) key = "(none)";
+				if(!groups[key]) { groups[key] = []; groupOrder.push(key); }
+				groups[key].push(title);
+			});
+			groupOrder.forEach(function(groupKey) {
+				self.renderNode({
+					value:      groupKey,
+					header:     false,
+					tidLink:    false,
+					isFilter:   false,
+					filterExpr: "",
+					groupBy:    "",
+					display:    groupKey,
+					tiddler:    "",
+					children:   groups[groupKey].map(function(title) {
+						return {value: title, header: false, tidLink: true,
+						        isFilter: false, filterExpr: "", groupBy: "",
+						        display: title, tiddler: title, children: []};
+					})
+				}, parent, level, filterPath);
+			});
+		} else {
+			// Phase A — flat list of tiddler items.
+			filterResults.forEach(function(title) {
+				self.renderNode({
+					value: title, header: false, tidLink: true,
+					isFilter: false, filterExpr: "", groupBy: "",
+					display: title, tiddler: title, children: []
+				}, parent, level, filterPath);
+			});
+		}
 
 	} else {
 		// Plain label (leaf, no + prefix)

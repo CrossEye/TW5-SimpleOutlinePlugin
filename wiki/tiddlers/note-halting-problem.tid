@@ -1,5 +1,7 @@
 title: note-halting-problem
 summary: Turing's proof (1936) that no general algorithm can determine whether an arbitrary program will halt or run forever
 tags: HistoryOfComputing
+year: 1936
+period: Computability Theory
 
 Proved by reduction to a contradiction: if a halting-detector existed, you could construct a program that does the opposite of what it predicts, causing it to be wrong. The result established that there are well-defined computational problems that are //provably unsolvable// — not just hard, but impossible. This was the first clear boundary on the power of computation.

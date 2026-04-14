@@ -1,5 +1,7 @@
 title: note-c-language
 summary: The C programming language (1972) — designed to write Unix portably; became the lingua franca of systems programming
 tags: HistoryOfComputing
+year: 1972
+period: Operating Systems
 
 Evolved from Thompson's B language (itself from BCPL). Designed by Ritchie at Bell Labs to be close enough to the machine to write an OS, yet high-level enough to be portable across architectures. The 1978 "K&R" book defined the language for a generation. C's influence is immeasurable: Unix, Windows NT, Linux, and most language runtimes are written in it; C syntax shaped Java, JavaScript, Python, and many others.

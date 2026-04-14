@@ -1,5 +1,7 @@
 title: note-thompson-ritchie
 summary: Ken Thompson and Dennis Ritchie — creators of Unix and C at Bell Labs; Turing Award 1983
 tags: HistoryOfComputing
+year: 1969
+period: Operating Systems
 
 Thompson (born 1943) and Ritchie (1941–2011) are among the most influential figures in computing history. Their work on Unix and C at Bell Labs in the late 1960s and early 1970s shaped the entire trajectory of software development. Ritchie's remark that Unix and C are "the first examples of what a computer operating system and language should be" is widely quoted. Rob Pike and others who worked with them at Bell Labs carried the same philosophy into Go and Plan 9.

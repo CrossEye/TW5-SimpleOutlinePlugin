@@ -1,5 +1,7 @@
 title: note-multics
 summary: Multics (1969) — ambitious time-sharing OS from MIT/Bell Labs/GE; too complex to succeed but enormously influential
 tags: HistoryOfComputing
+year: 1969
+period: Operating Systems
 
 Multiplexed Information and Computing Service. Introduced many ideas now taken for granted: hierarchical file systems, dynamic linking, per-process virtual address spaces, ring-based security. Its complexity and slow delivery caused Bell Labs to withdraw in 1969. Ken Thompson and Dennis Ritchie, freed from Multics, created Unix as a deliberate simplification — keeping the good ideas, discarding the rest.

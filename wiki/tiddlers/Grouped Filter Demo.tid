@@ -1,0 +1,36 @@
+title: Grouped Filter Demo
+tags: TableOfContents
+type: text/vnd.tiddlywiki
+
+\function .decade(n)
+[<n>divide[10]floor[]multiply[10]compare:number:gteq[1930]else[pre-1930]addsuffix['s]]
+\end
+
+\procedure decade()
+<$let year={{{ [<currentTiddler>get[year]] }}}>
+<$text text={{{ [.decade<year>] }}}/></$let>
+\end
+
+!! Grouped Filter Demo
+
+Demonstrates `group-by` on a `++` filter line.
+
+!!! Group by field
+
+`group-by:period` reads the `period` field on each matched tiddler and produces one collapsible group per distinct value.
+
+<$simple-outline text="""
+!! History Notes by Period
+  ++ [tag[HistoryOfComputing]sort[title]] group-by:period
+""" class="outline" open-depth="1" label-fields="summary caption"/>
+
+---
+
+!!! Group by procedure
+
+`group-by:<<decade>>` invokes a procedure for each tiddler that reads the `year` field and returns a decade string.  The `.decade` helper function does all the work in a single filter pipeline: divide by 10, floor, multiply by 10 to get the decade base, then `compare:number:gteq[1930]else[pre-1930]addsuffix['s]` to produce the label.  Using `sort[year]` in the filter means the groups appear in chronological order.
+
+<$simple-outline text="""
+!! History Notes by Decade
+  ++ [tag[HistoryOfComputing]sort[year]] group-by:<<decade>>
+""" class="outline" open-depth="1" label-fields="summary caption"/>

@@ -86,6 +86,10 @@ Shows `group-template` and `header-template` together, giving the structural nod
 
 Demonstrates `++` filter lines: one section is populated entirely by evaluating a TW filter against the live store, the other mixes a filter with hand-picked static items.  Adding a tiddler tagged `HistoryOfComputing` makes it appear in the first section instantly — no outline text to edit.
 
+!!! [[Grouped Filter Demo]]
+
+Demonstrates `group-by` on `++` filter lines.  The field example groups notes by their `period` field.  The procedure example groups the same notes by decade using a `<<decade>>` procedure that reads each note's `year` field and returns a decade string — a computation no plain field lookup can express.
+
 !!! [[WikiText Reference Outline Demo]]
 
 Demonstrates that the outline structure stands on its own even when the referenced tiddlers don't exist locally.  The entry names are real tiddler titles from the main site -- drag <span style="color: #5778d8; text-decoration: underline; cursor: grab;"><$draggable filter="[[$:/plugins/crosseye/simple-outline]] [[WikiText Reference Outline Demo]]" tag="span">the plugin and the outline tiddler</$draggable></span> to [[tiddlywiki.com|https://tiddlywiki.com]], save and refresh to see it populated with live content. (A link to this tiddler will show up at the top of the table of contents.).  //Note that no tiddlers were harmed in the creation of this outline.//

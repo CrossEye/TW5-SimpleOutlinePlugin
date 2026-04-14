@@ -1,0 +1,17 @@
+title: $:/_/so/version/0.12.0
+tags: so-version
+version: 0.12.0
+sort-key: 000012000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.0/
+
+!!! [[0.12.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.0/]]
+
+!!!! Commit (2026-04-13)
+
+```
+group-by on ++ filter lines
+```
+
+`++` filter lines now accept an optional `group-by:value` option.  Supply a field name to bucket results by that field (`group-by:period`), or a procedure call to compute a key per tiddler (`group-by:<<decade>>`).  Tiddlers with no value for the field fall into a `(none)` group.  Groups render as collapsible nodes with the matching items as children.  Add Grouped Filter Demo with field and procedure examples.
+
+----------

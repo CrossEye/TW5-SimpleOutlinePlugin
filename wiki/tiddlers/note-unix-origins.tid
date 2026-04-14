@@ -1,5 +1,7 @@
 title: note-unix-origins
 summary: Unix (1969) — small, composable OS born from Bell Labs' exit from Multics; defined modern operating system design
 tags: HistoryOfComputing
+year: 1969
+period: Operating Systems
 
 Thompson wrote the first version partly to run a game (Space Travel) on a discarded PDP-7. Ritchie joined soon after. The small-tools philosophy — each program does one thing well, programs connect via pipes — was a direct reaction to Multics's complexity. Unix was rewritten in C (1973), making it the first portable OS. The AT&T source licence led to BSD, which led to macOS; the POSIX standard and GNU/Linux descend from the same ideas.

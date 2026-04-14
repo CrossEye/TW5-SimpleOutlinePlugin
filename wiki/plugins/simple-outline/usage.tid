@@ -235,3 +235,38 @@ A line beginning with `++` is a filter expression.  At render time the filter is
 Filter items respond to all the same attributes as static items: `label-fields`, `summary-template`, `detail-template`, `tiddler-link`, and `open-depth` all apply.
 
 Because filter results can change as tiddlers are added, edited, or deleted, outlines containing `++` lines automatically re-render when any tiddler outside the outline's own state namespace changes.  (State tiddlers — which record open/closed positions — are excluded so that toggling a node does not trigger a re-render.)
+
+!! group-by
+
+An optional `group-by:value` option after the filter expression groups results into collapsible group nodes — one per distinct key — with the matching tiddlers as children.
+
+!!! Group by field
+
+```
+<$simple-outline text="""
+!! Notes by Category
+  ++ [tag[reading-notes]sort[title]] group-by:category
+"""/>
+```
+
+Each tiddler's `category` field is used as its group key.  Tiddlers with no value for the field fall into a `(none)` group.
+
+!!! Group by procedure
+
+```
+<$simple-outline text="""
+!! Notes by Era
+  ++ [tag[reading-notes]] group-by:<<my-grouper>>
+"""/>
+```
+
+The named procedure is invoked once per tiddler with `<<currentTiddler>>` set to its title; its plain-text output is used as the group key.  This allows arbitrary computed grouping — reclassifying field values, combining conditions, etc. — beyond what a single field lookup can express.
+
+The procedure can be defined in the same tiddler as the outline (above the widget call) or globally in a tiddler tagged `$:/tags/Macro`.  Example:
+
+```
+\procedure my-grouper()
+<$list filter="[<currentTiddler>get[year]compare:integer:lt[1950]]" variable="ignore">Before 1950</$list>
+<$list filter="[<currentTiddler>get[year]compare:integer:gteq[1950]]" variable="ignore">1950 and later</$list>
+\end
+```

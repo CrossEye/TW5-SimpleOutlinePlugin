@@ -6,6 +6,25 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.0/
 
 !!! [[0.12.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.0/]]
 
+!!!! Commit [[1d97d53|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/1d97d53381a6a5d8cedf730c655b71e6589871b8]] (2026-04-13)
+
+```
+group-by on ++ filter lines
+
+group-by:field — buckets filter results by a tiddler field into collapsible
+group nodes (one per distinct value; tiddlers with no value fall into a
+'(none)' group).
+
+group-by:<<procedure>> — invokes a procedure once per tiddler with
+currentTiddler set; the plain-text output is used as the group key, enabling
+arbitrary computed grouping (e.g. decade bucketing via a \function + \procedure
+pair using filter arithmetic: divide/floor/multiply).
+
+Add Grouped Filter Demo with field and procedure examples.
+Add year and period fields to the 17 History of Computing note tiddlers.
+Backfill changelog entries for 0.9.1 and 0.10.0.
+```
+
 !!!! Commit (2026-04-13)
 
 ```

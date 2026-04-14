@@ -270,7 +270,7 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	var container = this.document.createElement("div");
 	container.className = this.getAttribute("class", "outline");
 	// Store state prefix so <$action-so-expand> / <$action-so-collapse> can find this container.
-	container.dataset.soOutlineState = this.stateBase;
+	if(container.dataset) container.dataset.soOutlineState = this.stateBase;
 
 	var text = this.getAttribute("text", "");
 	if(text.trim()) {
@@ -446,7 +446,7 @@ SimpleOutlineWidget.prototype.wireState = function(el, stateTitle, defaultOpen) 
 		el.setAttribute("open", "");
 	}
 	// Store stateTitle on the element so the keyboard handler can find it.
-	el.dataset.soState = stateTitle;
+	if(el.dataset) el.dataset.soState = stateTitle;
 	el.addEventListener("toggle", function() {
 		if(el.open) {
 			wiki.setText(stateTitle, "text", null, "open");

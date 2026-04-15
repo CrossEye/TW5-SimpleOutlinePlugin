@@ -6,6 +6,17 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.2/
 
 !!! [[0.12.2|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.2/]]
 
+!!!! Commit [[49fe4be|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/49fe4bef4a2466440de3de58dddc6e7b514c33de]] (2026-04-15)
+
+```
+wikitext tiddler-link-label, SVG sizing, link-label demo
+
+Render tiddler-link-label as inline wikitext so transclusions like
+{{$:/core/images/link}} and HTML entities like &#x1f517; work as link
+labels.  Add CSS to size SVG icons inside .so-tiddler-link to 1em.
+Add Tiddler Link Label demo tiddler illustrating both forms.
+```
+
 !!!! Commit (2026-04-15)
 
 ```

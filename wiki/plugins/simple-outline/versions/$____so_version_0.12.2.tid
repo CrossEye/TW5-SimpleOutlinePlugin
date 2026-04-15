@@ -1,0 +1,17 @@
+title: $:/_/so/version/0.12.2
+tags: so-version
+version: 0.12.2
+sort-key: 000012002
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.2/
+
+!!! [[0.12.2|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.12.2/]]
+
+!!!! Commit (2026-04-15)
+
+```
+feat: render tiddler-link-label as inline wikitext
+```
+
+The `tiddler-link-label` attribute is now rendered as inline wikitext instead of plain text, enabling transclusions (e.g. `{{$:/core/images/link}}`), HTML entities (e.g. `&#x1f517;`), and other wikitext markup as the link label.  The plugin CSS now sizes SVG icons inside `.so-tiddler-link` to `1em` so transclusions of core icons fit neatly alongside the row text.  A new //Tiddler Link Label// demo illustrates both forms.
+
+----------

@@ -136,6 +136,12 @@ tags: $:/tags/Stylesheet
 	color: #33c;
 }
 
+.outline .so-tiddler-link svg {
+	width: 1em;
+	height: 1em;
+	vertical-align: middle;
+}
+
 /*-- so-detail-title: linked tiddler title inside detail-template content ----*/
 .outline .so-detail-title {
 	display: block;

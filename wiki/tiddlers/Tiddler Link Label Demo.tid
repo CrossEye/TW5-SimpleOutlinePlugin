@@ -1,0 +1,42 @@
+title: Tiddler Link Label Demo
+caption: Tiddler Link Label
+tags: TableOfContents [[Simple Outline Demo]]
+type: text/vnd.tiddlywiki
+
+Demonstrates the `tiddler-link-label` attribute with wikitext.  The label is rendered as inline wikitext, so transclusions and HTML entities work — not just plain text.
+
+The first outline below uses a core SVG icon as the link label via `tiddler-link-label="{{$:/core/images/link}}"`.  The second uses the 🔗 emoji via its HTML entity (`&#x1f517;`).
+
+!! SVG icon label
+
+<$simple-outline class="outline" tiddler-link="yes" tiddler-link-label="{{$:/core/images/link}}" open-depth="1" text="""
+!! Theoretical Foundations
+
+  Mathematical Precursors
+    + note-boole-algebra
+    + note-babbage-engine
+
+  Computability Theory
+    + note-turing-machines
+    + note-church-lambda
+
+!! The First Machines (1940s)
+
+  + note-colossus
+  + note-eniac
+  + note-von-neumann-architecture
+"""/>
+
+!! HTML entity label
+
+<$simple-outline class="outline" tiddler-link="yes" tiddler-link-label="&#x1f517;" open-depth="1" text="""
+!! Operating Systems
+
+  Academic Origins
+    + note-multics
+
+  Bell Labs Breakaway
+    + note-unix-origins
+    + note-c-language
+    + note-thompson-ritchie
+"""/>

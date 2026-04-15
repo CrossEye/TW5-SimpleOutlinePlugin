@@ -61,7 +61,10 @@ tiddler-link:
   toggling the outline node.  It is appended inline inside .so-label so it flows right after the text,
   including when the label wraps to multiple lines.  A stopPropagation handler
   prevents the click from reaching the native toggle.
-  tiddler-link-label: glyph or text for the link (default ✳ U+2731).
+  tiddler-link-label: wikitext for the link label (default ✳ U+2731).
+                     Rendered as inline wikitext, so transclusions like
+                     {{$:/core/images/link}} and HTML entities like &#x1f517;
+                     are supported.
 
 open-depth:
   Integer.  Nodes at levels 0 through open-depth-1 are open by default on
@@ -230,6 +233,9 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	// contentTargets: [{tiddlerTitle, label, domNode}]
 	// Filled for every tiddler item that has expandable content.
 	this.contentTargets = [];
+	// linkLabelTargets: [{domNode}]
+	// One entry per tiddler-link anchor; child widgets render the label as wikitext.
+	this.linkLabelTargets = [];
 	// focusables: [<summary> elements] in document order for keyboard navigation.
 	this.focusables = [];
 	// hasFilterNodes: true if any ++ filter line was encountered during renderTree.
@@ -347,6 +353,14 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 		allNodes.push(transcludeNode(macroAttr("toc-closed-icon"), false));
 		allDomNodes.push(t.arrowDomNode);
 	});
+
+	if(this.linkLabelTargets.length) {
+		var parsedLinkLabel = this.wiki.parseText("text/vnd.tiddlywiki", this.tiddlerLinkLabel, {parseAsInline: true});
+		this.linkLabelTargets.forEach(function(t) {
+			allNodes.push({type: "element", tag: "span", children: parsedLinkLabel.tree});
+			allDomNodes.push(t.domNode);
+		});
+	}
 
 	this.contentTargets.forEach(function(t) {
 		if(self.detailTemplate) {
@@ -648,7 +662,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 					var linkEl = doc.createElement("a");
 					linkEl.href = "#";
 					linkEl.className = "so-tiddler-link";
-					linkEl.textContent = self.tiddlerLinkLabel;
+					self.linkLabelTargets.push({domNode: linkEl});
 					linkEl.addEventListener("click", function(e) {
 						e.stopPropagation();
 						e.preventDefault();
@@ -672,7 +686,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 				var leafLink = doc.createElement("a");
 				leafLink.href = "#";
 				leafLink.className = "so-tiddler-link";
-				leafLink.textContent = self.tiddlerLinkLabel;
+				self.linkLabelTargets.push({domNode: leafLink});
 				leafLink.addEventListener("click", function(e) {
 					e.stopPropagation();
 					e.preventDefault();

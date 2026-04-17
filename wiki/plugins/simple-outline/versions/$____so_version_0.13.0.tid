@@ -6,6 +6,20 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/
 
 !!! [[0.13.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/]]
 
+!!!! Commit [[e888e1f|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/e888e1f1ee80364e1658f873fc3d0f849f7a46e9]] (2026-04-17)
+
+```
++ tiddler nodes with children, tiddler-label-link, missing-tiddler links
+
++ tiddler references can now have indented children: the node renders as an
+expandable row whose body (if any) precedes the child nodes in the panel.
+New tiddler-label-link attribute makes the label itself a navigation link,
+with arrows as the sole toggle — useful for top-down scaffolding where some
+tiddlers don't exist yet.  tiddler-link glyph now shown for missing leaf
+tiddlers too.  Default CSS adds .so-missing styling and .so-label-link rules.
+New Cuisine Outline demo illustrates all three features.
+```
+
 !!!! Minor release (2026-04-17)
 
 ```

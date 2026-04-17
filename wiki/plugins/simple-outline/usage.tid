@@ -27,7 +27,8 @@ Each line of the `text` attribute describes one node:
 
 |!Syntax |!Meaning |
 |`!! Heading` |Section header — renders as `<h2>` |
-|`+ tiddler-name` |Tiddler reference — expands to show its body if it exists |
+|`+ tiddler-name` |Tiddler reference — expands to show its body if it has content |
+|`+ tiddler-name` with children |Tiddler item that is also a parent; its body (if any) appears in the expanded panel, followed by the child nodes |
 |`display text :: tiddler-name` |Same, with an explicit label instead of the tiddler title |
 |`++ filter-expression` |Filter — expands to one tiddler item per result at render time |
 |Plain text |Structural group — collapsible if it has children |
@@ -44,8 +45,9 @@ For tiddler references, the displayed label comes from the first non-empty value
 |`group-template` |— |Tiddler rendered inside each `<summary>` for group nodes; receives `so-label` only |
 |`header-template` |— |Tiddler rendered inside `!!` section header divs, replacing the default `<h2>`; receives `so-label` only |
 |`detail-template` |— |Tiddler rendered as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` |
-|`tiddler-link` |— |When non-empty, adds a link on the summary row that opens the tiddler without toggling the node |
-|`tiddler-link-label` |`✳` |Glyph or text for the `tiddler-link` (only used when `tiddler-link` is set) |
+|`tiddler-link` |— |When non-empty, adds a small glyph link on each tiddler item's row that opens the tiddler without toggling the node.  Works for missing tiddlers. |
+|`tiddler-link-label` |`✳` |Wikitext for the `tiddler-link` glyph — transclusions and HTML entities are supported (only used when `tiddler-link` is set) |
+|`tiddler-label-link` |— |When non-empty, makes each tiddler item's label itself a navigation link; arrows remain the sole toggle.  Works for missing tiddlers. |
 |`open-depth` |`0` |Levels to open by default on first render (0 = all closed) |
 |`label-fields` |`summary caption` |Space-separated field names tried in order to compute the display label |
 |`state` |— |Explicit prefix for state tiddlers; makes state persistent and addressable across rendering contexts |
@@ -59,10 +61,11 @@ The plugin generates a predictable DOM structure that you can target with CSS.
 |`.level-0` … `.level-N` |Applied to every element; controls indentation |
 |`.so-header` |`<div>` wrapping a `!!` section header |
 |`.so-group` |`<details>` for a plain collapsible group node |
-|`.so-tiddler` |`<details>` for a tiddler item that has body content |
-|`.so-leaf` |`<div>` for a tiddler item with no body content |
+|`.so-tiddler` |`<details>` for a tiddler item that has body content, or a `+` node that has children |
+|`.so-leaf` |`<div>` for a tiddler item with no body content and no children |
 |`.so-text` |`<div>` for a plain label line (no `+` prefix) |
-|`.so-missing` |Added to `.so-leaf` when the referenced tiddler does not exist |
+|`.so-missing` |Added to `.so-tiddler` or `.so-leaf` when the referenced tiddler does not exist |
+|`.so-label-link` |`<a>` wrapping the label text when `tiddler-label-link` is set |
 |`.outline details[open]` |A currently-expanded node |
 |`.outline details > summary` |The clickable row header |
 |`.so-arrow` |`<span>` inside `<summary>` holding the rotating arrow icon |
@@ -186,6 +189,20 @@ The link sits inside `<summary>` at the trailing edge (pushed right by `margin-l
 ```
 
 Style the link with `.so-tiddler-link` in CSS.
+
+!! tiddler-label-link
+
+When non-empty, makes each tiddler item's label itself a clickable navigation link.  Clicking the label dispatches a `tm-navigate` event to open the tiddler in the story river.  For expandable nodes, the disclosure arrows remain the only way to toggle open/closed.
+
+```
+<$simple-outline text={{MyOutline}} tiddler-label-link="yes"/>
+```
+
+Works for missing tiddlers — navigating to a non-existent tiddler opens TiddlyWiki's new-tiddler editor.  This makes the outline usable as a top-down scaffold: write the full hierarchy first, then click labels to fill in tiddlers one by one.
+
+`tiddler-label-link` and `tiddler-link` are independent.  Use one, both, or neither.  When both are set, the label navigates and the glyph also navigates — the glyph is then somewhat redundant but provides a larger click target on leaf rows.
+
+Style the label link with `.so-label-link` in CSS.
 
 !! state
 

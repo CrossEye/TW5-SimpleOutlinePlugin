@@ -1,0 +1,25 @@
+title: $:/_/so/version/0.13.0
+tags: so-version
+version: 0.13.0
+sort-key: 000013000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/
+
+!!! [[0.13.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/]]
+
+!!!! Minor release (2026-04-17)
+
+```
+feat: + tiddler nodes with children; tiddler-label-link; missing-tiddler links
+```
+
+* `+` tiddler references can now have indented children.  The node renders as an expandable row: its body (when the tiddler exists and has content) appears in the expanded panel, followed by the child nodes.  This allows every level of a hierarchy — not just the leaves — to be a tiddler.
+
+* New `tiddler-label-link` attribute: makes each tiddler item's label itself a navigation link.  The disclosure arrows remain the sole toggle mechanism.  Navigating to a missing tiddler opens TiddlyWiki's new-tiddler editor, making the outline usable as a top-down scaffold.
+
+* `tiddler-link` glyph is now shown for missing leaf tiddlers (previously suppressed).
+
+* Default CSS now styles `.so-missing` items (italic, muted) and `.so-label-link` anchors, and extends `.so-tiddler-link` to cover leaf rows as well as summary rows.
+
+* New //Cuisine Outline// demo illustrates all three features with a recipe-wiki outline where every level is a tiddler and several entries are deliberately left as placeholders.
+
+----------

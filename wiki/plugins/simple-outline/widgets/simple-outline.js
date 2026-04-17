@@ -26,6 +26,8 @@ Input format:
                  Options (after the last ] of the filter):
                    group-by:field        group results by a tiddler field value
                    group-by:<<proc>>     group results by calling a named procedure
+  + with children → tiddler item that is also expandable; its body (if any)
+                 is shown in the expanded panel, followed by its child nodes
   plain text   → structural group node (collapsible if it has children)
   indentation  → nesting (children are indented under their parent)
   :: separator → display text :: tiddler title (overrides display label)
@@ -65,6 +67,19 @@ tiddler-link:
                      Rendered as inline wikitext, so transclusions like
                      {{$:/core/images/link}} and HTML entities like &#x1f517;
                      are supported.
+  tiddler-link-label applies to all tiddler items (expandable and leaf alike)
+  and also works for missing tiddlers — navigating to a missing tiddler opens
+  TiddlyWiki's new-tiddler editor.
+
+tiddler-label-link:
+  When non-empty, makes each tiddler item's label itself a navigation link.
+  Clicking the label navigates to the tiddler (or opens the new-tiddler editor
+  if the tiddler doesn't exist yet); the disclosure arrows remain the sole
+  toggle mechanism for expandable nodes.  Use this when every level of the
+  hierarchy is a tiddler and you want the whole label to be clickable rather
+  than a separate glyph.  Works for missing tiddlers, so an outline can serve
+  as a top-down scaffold: write the full structure first, then fill in tiddlers
+  by clicking their labels.
 
 open-depth:
   Integer.  Nodes at levels 0 through open-depth-1 are open by default on
@@ -260,6 +275,7 @@ SimpleOutlineWidget.prototype.render = function(parent, nextSibling) {
 	}
 	this.tiddlerLink = this.getAttribute("tiddler-link", "");
 	this.tiddlerLinkLabel = this.getAttribute("tiddler-link-label", "\u2731");
+	this.tiddlerLabelLink = this.getAttribute("tiddler-label-link", "");
 	this.openDepth = parseInt(this.getAttribute("open-depth", "0"), 10) || 0;
 	var labelFieldsAttr = this.getAttribute("label-fields", "summary caption");
 	this.labelFields = labelFieldsAttr.trim().split(/\s+/).filter(Boolean);
@@ -597,6 +613,67 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 				el.appendChild(h2);
 			}
 			self.renderTree(node.children, el, level + 1, nodePath);
+		} else if(node.tidLink) {
+			// + tiddler node with children — tiddler item that is also a parent.
+			// Summary row behaves like any tiddler item (label, optional link glyph,
+			// optional label-link); the expanded panel holds the tiddler body (when
+			// the tiddler exists and has content) followed by the child nodes.
+			var tid = self.wiki.getTiddler(node.tiddler);
+			self.referencedTiddlers.push(node.tiddler);
+
+			var label = node.display;
+			if(tid) {
+				for(var i = 0; i < self.labelFields.length; i++) {
+					var v = tid.fields[self.labelFields[i]];
+					if(v) { label = v; break; }
+				}
+			}
+			el = doc.createElement("details");
+			el.className = cls + " so-tiddler" + (tid ? "" : " so-missing");
+			self.wireState(el, stateTitle, level < self.openDepth);
+			summary = doc.createElement("summary");
+			self.addArrows(summary);
+			if(self.summaryTemplate) {
+				self.summaryTargets.push({label: label, tiddlerTitle: node.tiddler, domNode: summary});
+			} else {
+				labelSpan = doc.createElement("span");
+				labelSpan.className = "so-label";
+				if(self.tiddlerLabelLink) {
+					var tidChildLabelLink = doc.createElement("a");
+					tidChildLabelLink.href = "#";
+					tidChildLabelLink.className = "so-label-link";
+					tidChildLabelLink.textContent = label;
+					tidChildLabelLink.addEventListener("click", function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+					});
+					labelSpan.appendChild(tidChildLabelLink);
+				} else {
+					labelSpan.textContent = label;
+				}
+				if(self.tiddlerLink) {
+					var tidChildLinkEl = doc.createElement("a");
+					tidChildLinkEl.href = "#";
+					tidChildLinkEl.className = "so-tiddler-link";
+					self.linkLabelTargets.push({domNode: tidChildLinkEl});
+					tidChildLinkEl.addEventListener("click", function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+					});
+					labelSpan.appendChild(tidChildLinkEl);
+				}
+				summary.appendChild(labelSpan);
+			}
+			el.appendChild(summary);
+			if(tid && tid.fields.text && tid.fields.text.trim()) {
+				contentDiv = doc.createElement("div");
+				contentDiv.className = "ltgraybox";
+				el.appendChild(contentDiv);
+				self.contentTargets.push({tiddlerTitle: node.tiddler, label: label, domNode: contentDiv});
+			}
+			self.renderTree(node.children, el, level + 1, nodePath);
 		} else {
 			// Plain group node — collapsible
 			el = doc.createElement("details");
@@ -629,7 +706,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 		parent.appendChild(el);
 
 	} else if(node.tidLink) {
-		// + tiddler reference
+		// + tiddler reference (leaf — no children in the outline)
 		var tid = self.wiki.getTiddler(node.tiddler);
 		self.referencedTiddlers.push(node.tiddler);
 
@@ -654,7 +731,20 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			} else {
 				labelSpan = doc.createElement("span");
 				labelSpan.className = "so-label";
-				labelSpan.textContent = label;
+				if(self.tiddlerLabelLink) {
+					var contentLabelLink = doc.createElement("a");
+					contentLabelLink.href = "#";
+					contentLabelLink.className = "so-label-link";
+					contentLabelLink.textContent = label;
+					contentLabelLink.addEventListener("click", function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+					});
+					labelSpan.appendChild(contentLabelLink);
+				} else {
+					labelSpan.textContent = label;
+				}
 				if(self.tiddlerLink) {
 					// Link is inline inside .so-label so it flows right after the text,
 					// even when the label wraps to multiple lines.
@@ -681,8 +771,21 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 			el = doc.createElement("div");
 			el.className = cls + " so-leaf item" + (tid ? "" : " so-missing");
 			p = doc.createElement("p");
-			p.textContent = label;
-			if(self.tiddlerLink && tid) {
+			if(self.tiddlerLabelLink) {
+				var leafLabelLink = doc.createElement("a");
+				leafLabelLink.href = "#";
+				leafLabelLink.className = "so-label-link";
+				leafLabelLink.textContent = label;
+				leafLabelLink.addEventListener("click", function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					self.dispatchEvent({type: "tm-navigate", navigateTo: node.tiddler});
+				});
+				p.appendChild(leafLabelLink);
+			} else {
+				p.textContent = label;
+			}
+			if(self.tiddlerLink) {
 				var leafLink = doc.createElement("a");
 				leafLink.href = "#";
 				leafLink.className = "so-tiddler-link";

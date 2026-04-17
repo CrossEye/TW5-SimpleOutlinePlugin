@@ -19,13 +19,14 @@ The `text` attribute can also be supplied via transclusion (`text={{MyOutlineTid
 
 ### Input format
 
-| Syntax                     | Meaning                                                |
-| -------------------------- | ------------------------------------------------------ |
-| `!! text`                  | Section header (`<h2>`)                                |
-| `+ tiddler-title`          | Tiddler item — expandable if the tiddler has content   |
-| `plain text`               | Structural group node — collapsible if it has children |
-| indentation                | Nesting (children indented under their parent)         |
-| `Display :: tiddler-title` | Override the display label for a tiddler item          |
+| Syntax                     | Meaning                                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `!! text`                  | Section header (`<h2>`)                                                                              |
+| `+ tiddler-title`          | Tiddler item — expandable if the tiddler has content                                                 |
+| `+ tiddler-title` (with indented children) | Tiddler item that is also a parent; body appears in the expanded panel, followed by child nodes |
+| `plain text`               | Structural group node — collapsible if it has children                                               |
+| indentation                | Nesting (children indented under their parent)                                                       |
+| `Display :: tiddler-title` | Override the display label for a tiddler item                                                        |
 
 ### Attributes
 
@@ -37,8 +38,9 @@ The `text` attribute can also be supplied via transclusion (`text={{MyOutlineTid
 | `group-template`     | —                | Tiddler rendered inside each `<summary>` for plain group nodes. Receives `so-label` only (group nodes have no associated tiddler).                                       |
 | `header-template`    | —                | Tiddler rendered inside `!!` section header divs, replacing the default `<h2>`. Receives `so-label` only.                                                                |
 | `detail-template`    | —                | Tiddler rendered as the expanded body for each tiddler item instead of transcluding the tiddler's own body. Receives `currentTiddler` and `so-label`.                    |
-| `tiddler-link`       | —                | When non-empty, adds a small link after each tiddler item's label. Clicking it opens the tiddler without toggling the outline node.                                      |
-| `tiddler-link-label` | `✳`              | Glyph or text for the `tiddler-link`. Only used when `tiddler-link` is set.                                                                                              |
+| `tiddler-link`       | —                | When non-empty, adds a small glyph link on each tiddler item's row. Clicking opens the tiddler without toggling. Works for missing tiddlers.                             |
+| `tiddler-link-label` | `✳`              | Wikitext for the `tiddler-link` glyph — transclusions and HTML entities supported. Only used when `tiddler-link` is set.                                                 |
+| `tiddler-label-link` | —                | When non-empty, makes each tiddler item's label itself a navigation link. Arrows remain the sole toggle. Works for missing tiddlers — useful for top-down scaffolding.   |
 | `open-depth`         | `0`              | Number of levels to open by default on first render. Explicit user toggles always take precedence.                                                                       |
 | `label-fields`       | `summary caption` | Space-separated list of tiddler field names tried in order to compute the display label. The outline text is the final fallback.                                         |
 

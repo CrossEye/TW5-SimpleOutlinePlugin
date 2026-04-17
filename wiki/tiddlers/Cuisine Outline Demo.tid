@@ -1,0 +1,42 @@
+title: Cuisine Outline Demo
+caption: Cuisine Outline
+tags: TableOfContents [[Simple Outline Demo]]
+type: text/vnd.tiddlywiki
+
+Demonstrates two features introduced in 0.13.0:
+
+; `+` nodes with children
+: A `+` tiddler reference can have indented children.  It renders as an expandable row whose summary shows the tiddler label and whose expanded panel contains the tiddler's body (if it exists) followed by the child nodes.  This lets every level of a hierarchy be a tiddler, not just the leaves.
+
+; `tiddler-label-link="yes"`
+: Makes the label text itself a navigation link.  Clicking the label opens the tiddler in the story river — or opens a new-tiddler editor when the tiddler does not yet exist.  The disclosure arrows remain the sole toggle mechanism.  Useful when the outline is a scaffold: write the full structure first, then fill in tiddlers by clicking their labels.
+
+; Missing tiddlers
+: Items shown in //italic grey// reference tiddlers that do not yet exist.  The `tiddler-link` glyph (✳) and `tiddler-label-link` both work for missing tiddlers, so the outline doubles as a to-do list for content that still needs to be written.
+
+; `tiddler-link="yes"` (also set here)
+: Adds the ✳ glyph at the right edge of each row as a secondary navigation affordance, independent of the label link.
+
+<$simple-outline class="outline" tiddler-link="yes" tiddler-label-link="yes" open-depth="2" text="""
++ cuisine-overview
+  + cuisine-european
+    + cuisine-french
+      + cuisine-french-sauces
+        + cuisine-bechamel
+        + cuisine-hollandaise
+        + cuisine-vinaigrette
+      + cuisine-french-soups
+        + cuisine-french-onion-soup
+        + cuisine-bouillabaisse
+    + cuisine-italian
+      + cuisine-pasta
+        + cuisine-carbonara
+        + cuisine-bolognese
+  + cuisine-asian
+    + cuisine-japanese
+      + cuisine-ramen
+      + cuisine-sushi
+    + cuisine-chinese
+      + cuisine-dim-sum
+      + cuisine-peking-duck
+"""/>

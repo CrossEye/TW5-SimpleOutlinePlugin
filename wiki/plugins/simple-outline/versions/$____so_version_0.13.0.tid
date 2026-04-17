@@ -6,6 +6,12 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/
 
 !!! [[0.13.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/0.13.0/]]
 
+!!!! Commit [[a6ced5d|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/a6ced5d9e0f58ba5f2411a032651ae775f77a4ac]] (2026-04-17)
+
+```
+fix: add 0.12.2/0.13.0 features to Simple Outline Plugin overview tiddler
+```
+
 !!!! Commit [[e888e1f|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/e888e1f1ee80364e1658f873fc3d0f849f7a46e9]] (2026-04-17)
 
 ```

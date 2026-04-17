@@ -34,6 +34,7 @@ The `text` attribute holds the outline description.  You can also supply it via 
 |!Syntax |!Meaning |
 |`!! Heading` |Section header (renders as `<h2>`) |
 |`+ tiddler-name` |Tiddler reference — expandable if the tiddler has body text |
+|`+ tiddler-name` with children |Tiddler item that is also a parent; body (if any) precedes child nodes in the expanded panel |
 |`label :: tiddler-name` |Override the display label for a tiddler reference |
 |`++ filter-expression` |Filter — expands to one item per matching tiddler at render time |
 |Plain text |Structural group — collapsible if it has children |
@@ -52,7 +53,9 @@ For tiddler references, the displayed label is taken from the first non-empty va
 |`group-template` |— |Tiddler to render inside each `<summary>` for group nodes; receives `so-label` only |
 |`header-template` |— |Tiddler to render inside `!!` section headers, replacing the default `<h2>`; receives `so-label` only |
 |`detail-template` |— |Tiddler to render as the expanded body for each tiddler item; receives `currentTiddler` and `so-label` |
-|`tiddler-link` |— |When non-empty, adds a link on each tiddler item's row that opens the tiddler without toggling the node |
+|`tiddler-link` |— |When non-empty, adds a small glyph link on each tiddler item's row that opens the tiddler without toggling the node.  Works for missing tiddlers. |
+|`tiddler-link-label` |`✳` |Wikitext for the `tiddler-link` glyph — transclusions such as `{{$:/core/images/link}}` and HTML entities are supported |
+|`tiddler-label-link` |— |When non-empty, makes each tiddler item's label itself a navigation link; arrows remain the sole toggle.  Works for missing tiddlers — useful for top-down scaffolding. |
 |`open-depth` |`0` |Levels to open by default on first render |
 |`label-fields` |`summary caption` |Space-separated field names tried in order for the display label |
 
@@ -78,6 +81,10 @@ Shows the `detail-template` attribute in action.  Instead of transcluding a tidd
 
 Shows the `tiddler-link` attribute: each tiddler item gets a small ✳ link on the right of its summary row.  Clicking it opens the tiddler in the story river without toggling the outline node, so you can read entries without losing your place.  Also uses `open-depth="1"` (added in 0.7.0) to pre-open the top level on first visit.
 
+!!! [[Tiddler Link Label Demo]]
+
+Shows the `tiddler-link-label` attribute with wikitext values.  The first outline uses a core SVG icon (`{{$:/core/images/link}}`) as the glyph; the second uses an HTML entity (`&#x1f517;`).  Prior to 0.12.2 only plain text worked; transclusions and HTML entities are now rendered as inline wikitext.
+
 !!! [[Styled Outline Demo]]
 
 Shows `group-template` and `header-template` together, giving the structural nodes a custom visual style.  The header template replaces the default `<h2>` with a ruled heading.  The group template renders labels in bold italic — and, because templates have full TW widget access, conditionally appends a short description from the group's own tiddler when one exists.
@@ -89,6 +96,10 @@ Demonstrates `++` filter lines: one section is populated entirely by evaluating 
 !!! [[Grouped Filter Demo]]
 
 Demonstrates `group-by` on `++` filter lines.  The field example groups notes by their `period` field.  The procedure example groups the same notes by decade using a `<<decade>>` procedure that reads each note's `year` field and returns a decade string — a computation no plain field lookup can express.
+
+!!! [[Cuisine Outline Demo]]
+
+Shows `+` tiddler nodes with children, `tiddler-label-link`, and missing-tiddler links — all new in 0.13.0.  Every level of the recipe hierarchy is a `+` tiddler reference.  Several entries (marked in italic) don't have tiddlers yet; clicking their labels opens a new-tiddler editor, making the outline a top-down scaffold for content still to be written.
 
 !!! [[WikiText Reference Outline Demo]]
 

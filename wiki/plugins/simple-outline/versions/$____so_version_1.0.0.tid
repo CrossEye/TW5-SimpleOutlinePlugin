@@ -6,6 +6,12 @@ download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/1.0.0/
 
 !!! [[1.0.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/1.0.0/]]
 
+!!!! Commit [[1cbb533|https://github.com/CrossEye/TW5-SimpleOutlinePlugin/commit/1cbb533bc9b55b37a80445a81e38c7268cd38a0b]] (2026-04-21)
+
+```
+polish pass — CSS cleanup, tab order, docs
+```
+
 !!!! Major release (2026-04-21)
 
 ```

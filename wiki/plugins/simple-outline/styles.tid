@@ -140,10 +140,6 @@ tags: $:/tags/Stylesheet
 	text-decoration: none;
 }
 
-.outline details > summary .so-tiddler-link {
-	/* already handled by .outline .so-tiddler-link above */
-}
-
 .outline .so-tiddler-link:hover {
 	color: #33c;
 }

@@ -70,6 +70,8 @@ tiddler-link:
   tiddler-link-label applies to all tiddler items (expandable and leaf alike)
   and also works for missing tiddlers — navigating to a missing tiddler opens
   TiddlyWiki's new-tiddler editor.
+  When tiddler-label-link is also set, the glyph anchor is removed from the
+  tab order (tabIndex = -1) so each row has only one Tab stop.
 
 tiddler-label-link:
   When non-empty, makes each tiddler item's label itself a navigation link.
@@ -656,6 +658,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 					var tidChildLinkEl = doc.createElement("a");
 					tidChildLinkEl.href = "#";
 					tidChildLinkEl.className = "so-tiddler-link";
+					if(self.tiddlerLabelLink) tidChildLinkEl.tabIndex = -1;
 					self.linkLabelTargets.push({domNode: tidChildLinkEl});
 					tidChildLinkEl.addEventListener("click", function(e) {
 						e.stopPropagation();
@@ -752,6 +755,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 					var linkEl = doc.createElement("a");
 					linkEl.href = "#";
 					linkEl.className = "so-tiddler-link";
+					if(self.tiddlerLabelLink) linkEl.tabIndex = -1;
 					self.linkLabelTargets.push({domNode: linkEl});
 					linkEl.addEventListener("click", function(e) {
 						e.stopPropagation();
@@ -789,6 +793,7 @@ SimpleOutlineWidget.prototype.renderNode = function(node, parent, level, path) {
 				var leafLink = doc.createElement("a");
 				leafLink.href = "#";
 				leafLink.className = "so-tiddler-link";
+				if(self.tiddlerLabelLink) leafLink.tabIndex = -1;
 				self.linkLabelTargets.push({domNode: leafLink});
 				leafLink.addEventListener("click", function(e) {
 					e.stopPropagation();

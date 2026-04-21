@@ -1,0 +1,22 @@
+title: $:/_/so/version/1.0.0
+tags: so-version
+version: 1.0.0
+sort-key: 001000000
+download: https://crosseye.github.io/TW5-SimpleOutlinePlugin/1.0.0/
+
+!!! [[1.0.0|https://crosseye.github.io/TW5-SimpleOutlinePlugin/1.0.0/]]
+
+!!!! Major release (2026-04-21)
+
+```
+chore: polish pass for v1.0.0
+```
+
+Final polish before the 1.0 milestone:
+
+* Remove spurious empty CSS rule left over from the 0.13.0 refactor.
+* When `tiddler-label-link` and `tiddler-link` are both set, the glyph anchor is now removed from the tab order (`tabIndex = -1`) so each row has a single Tab stop.
+* `usage.tid`: document that `tiddler-label-link` is ignored when `summary-template` is set, and note the tab-order behaviour when both link attributes are active.
+* Overview tiddler: rewrite "What It Does" to reflect `+` nodes with children and `tiddler-label-link`.
+
+----------

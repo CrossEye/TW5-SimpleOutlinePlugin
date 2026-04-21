@@ -200,7 +200,9 @@ When non-empty, makes each tiddler item's label itself a clickable navigation li
 
 Works for missing tiddlers — navigating to a non-existent tiddler opens TiddlyWiki's new-tiddler editor.  This makes the outline usable as a top-down scaffold: write the full hierarchy first, then click labels to fill in tiddlers one by one.
 
-`tiddler-label-link` and `tiddler-link` are independent.  Use one, both, or neither.  When both are set, the label navigates and the glyph also navigates — the glyph is then somewhat redundant but provides a larger click target on leaf rows.
+`tiddler-label-link` and `tiddler-link` are independent.  Use one, both, or neither.  When both are set, the label navigates and the glyph also navigates — the glyph is then somewhat redundant but provides a larger click target on leaf rows.  In that case the glyph anchor is removed from the tab order so each row has only one Tab stop (the label link).
+
+`tiddler-label-link` is ignored when `summary-template` is set.  The template owns the entire `<summary>` contents and is responsible for its own label structure; the widget does not inject a label link on top of it.
 
 Style the label link with `.so-label-link` in CSS.
 

@@ -6,7 +6,7 @@ type: text/vnd.tiddlywiki
 
 !! What It Does
 
-The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a collapsible, nested outline from a plain-text description.  Each node can reference a tiddler — when the tiddler has body text, the node becomes expandable and shows that content inline.  Open/closed state is preserved for the duration of the session.
+The ''Simple Outline'' plugin adds a `<$simple-outline>` widget that renders a collapsible, nested outline from a plain-text description.  Nodes prefixed with `+` reference tiddlers: they become expandable and show the tiddler's body inline when it has content.  `+` nodes can have children too, so every level of a hierarchy — not just the leaves — can be a tiddler.  Setting `tiddler-label-link="yes"` makes each tiddler item's label a navigation link, which lets an outline serve as a top-down scaffold: write the full structure first, then click labels to create tiddlers one by one.  Open/closed state is preserved for the duration of the session.
 
 !! Installation
 
